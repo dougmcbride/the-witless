@@ -279,7 +279,6 @@ func ==(lhs: Position, rhs: Position) -> Bool {
     return lhs.x == rhs.x && lhs.y == rhs.y
 }
 
-let renderer = ASCIIRenderer()
 let things: [[Thing]] = [
         [.BlackStar,   .Empty,       .Empty,       .BlackSquare],
         [.WhiteSquare, .WhiteSquare, .BlackStar,       .Empty],
@@ -304,9 +303,10 @@ func successfulBoards(board: Board) -> [Board] {
 }
 
 let boards = successfulBoards(board)
-print("boards = \(boards.count)")
-renderer.drawBoard(boards.first!)
+print("Found \(boards.count) possible solutions")
 
-//print(boards.first!)
+if let solution = boards.first {
+    ASCIIRenderer().drawBoard(solution)
+}
 
 
