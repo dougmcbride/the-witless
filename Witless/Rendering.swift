@@ -28,12 +28,10 @@ struct ASCIIRenderer: Renderer {
                 switch board.things[y][x] {
                     case .Empty:
                         square = "..."
-                    case .WhiteSquare:
-                        square = "[W]"
-                    case .BlackSquare:
-                        square = "[B]"
-                    case .BlackStar:
-                        square = "[*]"
+                    case .Square(let color):
+                        square = "[\(color.initial)]"
+                    case .Star(let color):
+                        square = "*\(color.initial)*"
                 }
 
                 print(square, terminator: "")

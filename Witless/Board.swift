@@ -102,22 +102,41 @@ struct Board {
             return false
         }
 
-        for things in regionThings() {
-            if things.contains(.WhiteSquare) && things.contains(.BlackSquare) {
-                return false
-            }
+        for regionContents in regionThings() {
+            var checkedSquares = false
 
-            switch (things.countThing(.BlackStar), things.countThing(.BlackSquare)) {
-                case (0, _):
-                    break
-                case (1, 1):
-                    break
-                case (1, _):
-                    return false
-                case (2, 0):
-                    break
-                default:
-                    return false
+            for thing in regionContents {
+                switch thing {
+                    case .Square(let color):
+                        if checkedSquares {
+                            break
+                        }
+                        checkedSquares = true
+                        if regionContents.contains({
+                            if case .Square(let c) = $0 where c != color {
+                                return true
+                            } else {
+                                return false
+                            }
+                        }) {
+                            return false
+                        }
+                    case .Star(let color):
+                        switch (regionContents.countThing(.Star(color)), regionContents.countThing(.Square(color))) {
+                            case (0, _):
+                                break
+                            case (1, 1):
+                                break
+                            case (1, _):
+                                return false
+                            case (2, 0):
+                                break
+                            default:
+                                return false
+                        }
+                    case .Empty:
+                        break
+                }
             }
         }
 

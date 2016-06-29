@@ -2,10 +2,10 @@
 //  Copyright (c) 2016 The Sneaky Frog. All rights reserved.
 
 let things: [[Thing]] = [
-        [.BlackStar,   .Empty,       .Empty,       .BlackSquare],
-        [.WhiteSquare, .WhiteSquare, .BlackStar,   .Empty],
-        [.BlackSquare, .Empty,       .WhiteSquare, .Empty],
-        [.Empty      , .BlackSquare, .WhiteSquare, .BlackStar],
+        [.Star(.Black),   .Empty,       .Empty,       .Square(.Black)],
+        [.Square(.White), .Square(.White), .Square(.Black),   .Empty],
+        [.Square(.Black), .Empty,       .Square(.White), .Empty],
+        [.Empty      , .Square(.Black), .Square(.White), .Star(.Black)],
 ]
 
 let startingBoard = Board(width: 5, height: 5,

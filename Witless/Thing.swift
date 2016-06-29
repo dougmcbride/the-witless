@@ -8,9 +8,35 @@ extension SequenceType where Generator.Element == Thing {
     }
 }
 
-enum Thing {
+enum Color {
+    static let initials: [Color:String] = [
+            .White: "W", .Black: "K",
+            .Green: "G", .Red: "R",
+            .Blue: "B", .Yellow: "Y",
+            .Purple: "P"]
+
+    case White, Black, Green, Red, Blue, Yellow, Purple
+
+    var initial: String {
+        return Color.initials[self]!
+    }
+}
+
+enum Thing: Equatable {
     case Empty
-    case BlackStar
-    case WhiteSquare
-    case BlackSquare
+    case Star(Color)
+    case Square(Color)
+}
+
+func ==(a: Thing, b: Thing) -> Bool {
+    switch (a, b) {
+        case (.Empty, .Empty):
+            return true
+        case (.Star(let c1), .Star(let c2)):
+            return c1 == c2
+        case (.Square(let c1), .Square(let c2)):
+            return c1 == c2
+        default:
+            return false
+    }
 }
