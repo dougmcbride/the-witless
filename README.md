@@ -1,6 +1,6 @@
 # The Witless
 
-Starting a puzzle solver for [The Witness](https://en.wikipedia.org/wiki/The_Witness_(2016_video_game)).
+Starting a brute-force puzzle solver for [The Witness](https://en.wikipedia.org/wiki/The_Witness_(2016_video_game)).
 
 ```
 let things: [[Thing]] = [
