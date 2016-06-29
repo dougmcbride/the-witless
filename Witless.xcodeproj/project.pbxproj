@@ -8,7 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		5D9890F259ABB93D29BFD87B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989304ECE268C5069FC978 /* main.swift */; };
+		5D9891E5DF055E4371A57146 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9899E8026A157C99FB5E5D /* Path.swift */; };
+		5D989482E1E2C751746CF369 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D98946D778BFBA850F1CDCB /* Board.swift */; };
 		5D9894E40116DB5661636EA7 /* Rendering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9890AE6828B8CD4AFBB1DB /* Rendering.swift */; };
+		5D989700A781AAA79CD4A249 /* Thing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989D3399B518CDDF629CE6 /* Thing.swift */; };
+		5D98999725641A51EF7F1EB7 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989F5DE084748BF5ECB104 /* Position.swift */; };
+		5D9899E45B2EC75AF8D2F54C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D98939D1E8148A4652B44D0 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,7 +31,12 @@
 /* Begin PBXFileReference section */
 		5D9890AE6828B8CD4AFBB1DB /* Rendering.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rendering.swift; sourceTree = "<group>"; };
 		5D989304ECE268C5069FC978 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		5D98939D1E8148A4652B44D0 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		5D98946D778BFBA850F1CDCB /* Board.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		5D98966288C71DEF1A4F32A9 /* Witless */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Witless; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9899E8026A157C99FB5E5D /* Path.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
+		5D989D3399B518CDDF629CE6 /* Thing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thing.swift; sourceTree = "<group>"; };
+		5D989F5DE084748BF5ECB104 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +71,11 @@
 			children = (
 				5D989304ECE268C5069FC978 /* main.swift */,
 				5D9890AE6828B8CD4AFBB1DB /* Rendering.swift */,
+				5D98946D778BFBA850F1CDCB /* Board.swift */,
+				5D98939D1E8148A4652B44D0 /* Extensions.swift */,
+				5D9899E8026A157C99FB5E5D /* Path.swift */,
+				5D989D3399B518CDDF629CE6 /* Thing.swift */,
+				5D989F5DE084748BF5ECB104 /* Position.swift */,
 			);
 			path = Witless;
 			sourceTree = "<group>";
@@ -117,6 +132,11 @@
 			files = (
 				5D9890F259ABB93D29BFD87B /* main.swift in Sources */,
 				5D9894E40116DB5661636EA7 /* Rendering.swift in Sources */,
+				5D989482E1E2C751746CF369 /* Board.swift in Sources */,
+				5D9899E45B2EC75AF8D2F54C /* Extensions.swift in Sources */,
+				5D9891E5DF055E4371A57146 /* Path.swift in Sources */,
+				5D989700A781AAA79CD4A249 /* Thing.swift in Sources */,
+				5D98999725641A51EF7F1EB7 /* Position.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

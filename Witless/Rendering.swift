@@ -3,7 +3,7 @@
 import Foundation
 
 protocol Renderer {
-    func drawBoard(board: Board, regionMap: [Position:Region])
+    func drawBoard(board: Board)
 }
 
 func *(string: String, times: Int) -> String {
@@ -15,7 +15,7 @@ func *(string: String, times: Int) -> String {
 }
 
 struct ASCIIRenderer: Renderer {
-    func drawBoard(board: Board, regionMap: [Position:Region] = [:]) {
+    func drawBoard(board: Board) {
         let width = totalWidthOfBoard(board)
         print("_" * width)
 
@@ -25,20 +25,15 @@ struct ASCIIRenderer: Renderer {
             printColumnSeparator(board, row: y, column: -1)
             for x in 0 ..< board.thingWidth {
                 let square: String
-                if let region = regionMap[Position(x, y)] {
-                    let id = region.positions.first!.hashValue % 1000
-                    square = NSString(format: "%03d", id) as String
-                } else {
-                    switch board.things[y][x] {
-                        case .Empty:
-                            square = "..."
-                        case .WhiteSquare:
-                            square = "[W]"
-                        case .BlackSquare:
-                            square = "[B]"
-                        case .BlackStar:
-                            square = "[*]"
-                    }
+                switch board.things[y][x] {
+                    case .Empty:
+                        square = "..."
+                    case .WhiteSquare:
+                        square = "[W]"
+                    case .BlackSquare:
+                        square = "[B]"
+                    case .BlackStar:
+                        square = "[*]"
                 }
 
                 print(square, terminator: "")
