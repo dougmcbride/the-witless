@@ -8,24 +8,37 @@ extension SequenceType where Generator.Element == Thing {
     }
 }
 
-enum Color {
-    static let initials: [Color:String] = [
-            .White: "W", .Black: "K",
-            .Green: "G", .Red: "R",
-            .Blue: "B", .Yellow: "Y",
-            .Purple: "P"]
-
-    case White, Black, Green, Red, Blue, Yellow, Purple
-
-    var initial: String {
-        return Color.initials[self]!
-    }
+enum Color: String {
+    case White = "W"
+    case Black = "K"
+    case Green = "G"
+    case Red = "R"
+    case Blue = "B"
+    case Yellow = "Y"
+    case Purple = "P"
 }
 
 enum Thing: Equatable {
     case Empty
     case Star(Color)
     case Square(Color)
+
+    static func parseStars(string: String) -> [[Thing]] {
+        return string.characters.split("/").map {
+            $0.map {
+                .Star(Color(rawValue: String($0))!)
+            }
+        }
+    }
+
+    static func parseSquares(string: String) -> [[Thing]] {
+        return string.characters.split("/").map {
+            $0.map {
+                .Square(Color(rawValue: String($0))!)
+            }
+        }
+    }
+
 }
 
 func ==(a: Thing, b: Thing) -> Bool {

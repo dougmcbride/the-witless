@@ -17,7 +17,7 @@ struct Board {
     }
 
     init(start: Position, end: Position, things: [[Thing]]) {
-        self.init(width: 5, height: 5, start: start, end: end, things: things)
+        self.init(width: things.first!.count + 1, height: things.count + 1, start: start, end: end, things: things)
     }
 
     init(width: Int, height: Int, start: Position, end: Position, things: [[Thing]]) {

@@ -29,9 +29,9 @@ struct ASCIIRenderer: Renderer {
                     case .Empty:
                         square = "..."
                     case .Square(let color):
-                        square = "[\(color.initial)]"
+                        square = "[\(color.rawValue)]"
                     case .Star(let color):
-                        square = "*\(color.initial)*"
+                        square = "*\(color.rawValue)*"
                 }
 
                 print(square, terminator: "")

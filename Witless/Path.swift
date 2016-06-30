@@ -16,9 +16,9 @@ struct Path {
             return []
         }
 
-        let a = positions.prefix(length)
-        let b = positions.suffix(length)
-        return zip(a, b).map {
+        let prefix = positions.prefix(length)
+        let suffix = positions.suffix(length)
+        return zip(prefix, suffix).map {
             Move(from: $0.0, to: $0.1)
         }
     }
