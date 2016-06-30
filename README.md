@@ -4,10 +4,10 @@ Starting a brute-force puzzle solver for [The Witness](https://en.wikipedia.org/
 
 ```
 let things: [[Thing]] = [
-        [.BlackStar,   .Empty,       .Empty,       .BlackSquare],
-        [.WhiteSquare, .WhiteSquare, .BlackStar,   .Empty],
-        [.BlackSquare, .Empty,       .WhiteSquare, .Empty],
-        [.Empty      , .BlackSquare, .WhiteSquare, .BlackStar],
+        [.Star(.Black),   .Empty,         .Empty,          .Square(.Black)],
+        [.Square(White),  .Square(White), .Star(.Black),   .Empty],
+        [.Square(.Black), .Empty,         .Square(.White), .Empty],
+        [.Empty,          .Square(Black), .Square(.White), .Star(.Black)],
 ]
 
 let board = Board(width: 5, height: 5, start: Position(2, 4), end: Position(4, 0), things: things)
