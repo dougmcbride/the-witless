@@ -23,22 +23,24 @@ enum Thing: Equatable {
     case Star(Color)
     case Square(Color)
 
-    static func parseStars(string: String) -> [[Thing]] {
+    static func parse(string: String) -> [[Thing]] {
         return string.characters.split("/").map {
             $0.map {
-                .Star(Color(rawValue: String($0))!)
+                let charString = String($0)
+                switch charString {
+                    case "E":
+                        return .Empty
+                    default:
+                        let uppercaseString = charString.uppercaseString
+                        if uppercaseString == charString {
+                            return .Square(Color(rawValue: uppercaseString)!)
+                        } else {
+                            return .Star(Color(rawValue: uppercaseString)!)
+                        }
+                }
             }
         }
     }
-
-    static func parseSquares(string: String) -> [[Thing]] {
-        return string.characters.split("/").map {
-            $0.map {
-                .Square(Color(rawValue: String($0))!)
-            }
-        }
-    }
-
 }
 
 func ==(a: Thing, b: Thing) -> Bool {

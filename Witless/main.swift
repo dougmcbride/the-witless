@@ -1,17 +1,17 @@
 //  The Witless
 //  Copyright (c) 2016 The Sneaky Frog. All rights reserved.
 
-//let things: [[Thing]] = [
-//        [.Square(.Blue), .Square(.White), .Square(.White), .Empty, .Square(.Yellow), ],
-//        [.Square(.Blue), .Empty, .Square(.Purple), .Empty, .Square(.Yellow), ],
-//        [.Square(.Blue), .Empty, .Square(.Purple), .Empty, .Square(.Yellow), ],
-//        [.Empty, .Empty, .Empty, .Square(.White), .Square(.White), ],
-//
-//]
+let boardThings: [[Thing]] = [
+        [.Star(.Black),   .Empty,          .Empty,          .Square(.Black)],
+        [.Square(.White), .Square(.White), .Star(.Black),   .Empty],
+        [.Square(.Black), .Empty,          .Square(.White), .Empty],
+        [.Empty,          .Square(.Black), .Square(.White), .Star(.Black)]
+ ]
 
-let things = Thing.parseStars("YYYY/YYBR/BBBR/RRRR")
+// This is shorthand for the above
+let things = Thing.parse("bEEB/WWbE/BEWE/EBWb")
 
-let startingBoard = Board(start: Position(0, 4), end: Position(4, 0),
+let startingBoard = Board(start: Position(2, 4), end: Position(4, 0),
                           things: things)
 
 let solutionBoards = startingBoard.successfulBoards()
