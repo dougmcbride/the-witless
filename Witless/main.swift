@@ -10,7 +10,7 @@ let boardThings: [[Thing]] = [
 
 // This is shorthand for the above
 //let things = Thing.parse("EEEEE/WBEEE/BEWBB/EEEEE/WBEEE")
-let things = Thing.parse("EEEEEE/222222/EEEEEE/111111/EEEEEE/222222")
+let things = try Thing.parse("EEEEEE/222222/EEEEEE/111111/EEEEEE/222222")
 
 let startingBoard = Board(start: Position(3, 6), end: Position(3, 0), things: things, wrapHorizontal: true)
 //let startingBoard = Board(width: 6, height: 6,

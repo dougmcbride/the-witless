@@ -13,7 +13,27 @@
 		5D9894E40116DB5661636EA7 /* Rendering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9890AE6828B8CD4AFBB1DB /* Rendering.swift */; };
 		5D989700A781AAA79CD4A249 /* Thing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989D3399B518CDDF629CE6 /* Thing.swift */; };
 		5D98999725641A51EF7F1EB7 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989F5DE084748BF5ECB104 /* Position.swift */; };
+		A2ED7D4C1D3BF4530050A2B3 /* WitlessTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2ED7D4B1D3BF4530050A2B3 /* WitlessTest.swift */; };
+		A2ED7D521D3BF5770050A2B3 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2ED7D511D3BF5770050A2B3 /* Quick.framework */; };
+		A2ED7D541D3BF5800050A2B3 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2ED7D531D3BF5800050A2B3 /* Nimble.framework */; };
+		A2ED7D561D3BF5A60050A2B3 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2ED7D531D3BF5800050A2B3 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2ED7D571D3BF5A60050A2B3 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2ED7D511D3BF5770050A2B3 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2ED7D5A1D3BF7110050A2B3 /* Rendering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9890AE6828B8CD4AFBB1DB /* Rendering.swift */; };
+		A2ED7D5B1D3BF7110050A2B3 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D98946D778BFBA850F1CDCB /* Board.swift */; };
+		A2ED7D5C1D3BF7110050A2B3 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9899E8026A157C99FB5E5D /* Path.swift */; };
+		A2ED7D5D1D3BF7110050A2B3 /* Thing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989D3399B518CDDF629CE6 /* Thing.swift */; };
+		A2ED7D5E1D3BF7110050A2B3 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989F5DE084748BF5ECB104 /* Position.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A2ED7D581D3BF7030050A2B3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5D989A2C72CE58A7E3DA3EC7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5D989062D3AFF3491860456F;
+			remoteInfo = Witless;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		5D989DF4B9D770E94B9C2C87 /* CopyFiles */ = {
@@ -25,16 +45,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		A2ED7D551D3BF58C0050A2B3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A2ED7D561D3BF5A60050A2B3 /* Nimble.framework in CopyFiles */,
+				A2ED7D571D3BF5A60050A2B3 /* Quick.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5D9890AE6828B8CD4AFBB1DB /* Rendering.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rendering.swift; sourceTree = "<group>"; };
-		5D989304ECE268C5069FC978 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		5D989304ECE268C5069FC978 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		5D98946D778BFBA850F1CDCB /* Board.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		5D98966288C71DEF1A4F32A9 /* Witless */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Witless; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D9899E8026A157C99FB5E5D /* Path.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
 		5D989D3399B518CDDF629CE6 /* Thing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thing.swift; sourceTree = "<group>"; };
 		5D989F5DE084748BF5ECB104 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		A2ED7D491D3BF4530050A2B3 /* WitlessTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WitlessTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2ED7D4B1D3BF4530050A2B3 /* WitlessTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WitlessTest.swift; sourceTree = "<group>"; };
+		A2ED7D4D1D3BF4530050A2B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2ED7D511D3BF5770050A2B3 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/Mac/Quick.framework; sourceTree = "<group>"; };
+		A2ED7D531D3BF5800050A2B3 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,12 +81,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A2ED7D461D3BF4530050A2B3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2ED7D541D3BF5800050A2B3 /* Nimble.framework in Frameworks */,
+				A2ED7D521D3BF5770050A2B3 /* Quick.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		5D989049967680E117563181 = {
 			isa = PBXGroup;
 			children = (
+				A2ED7D531D3BF5800050A2B3 /* Nimble.framework */,
+				A2ED7D511D3BF5770050A2B3 /* Quick.framework */,
+				A2ED7D4A1D3BF4530050A2B3 /* WitlessTest */,
 				5D9898CE21499273B9C3E0DE /* Products */,
 				5D989DF634D390EFBAB7A0FE /* Witless */,
 			);
@@ -60,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				5D98966288C71DEF1A4F32A9 /* Witless */,
+				A2ED7D491D3BF4530050A2B3 /* WitlessTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -75,6 +124,15 @@
 				5D989F5DE084748BF5ECB104 /* Position.swift */,
 			);
 			path = Witless;
+			sourceTree = "<group>";
+		};
+		A2ED7D4A1D3BF4530050A2B3 /* WitlessTest */ = {
+			isa = PBXGroup;
+			children = (
+				A2ED7D4B1D3BF4530050A2B3 /* WitlessTest.swift */,
+				A2ED7D4D1D3BF4530050A2B3 /* Info.plist */,
+			);
+			path = WitlessTest;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -97,13 +155,38 @@
 			productReference = 5D98966288C71DEF1A4F32A9 /* Witless */;
 			productType = "com.apple.product-type.tool";
 		};
+		A2ED7D481D3BF4530050A2B3 /* WitlessTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A2ED7D4E1D3BF4530050A2B3 /* Build configuration list for PBXNativeTarget "WitlessTest" */;
+			buildPhases = (
+				A2ED7D451D3BF4530050A2B3 /* Sources */,
+				A2ED7D461D3BF4530050A2B3 /* Frameworks */,
+				A2ED7D471D3BF4530050A2B3 /* Resources */,
+				A2ED7D551D3BF58C0050A2B3 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A2ED7D591D3BF7030050A2B3 /* PBXTargetDependency */,
+			);
+			name = WitlessTest;
+			productName = WitlessTest;
+			productReference = A2ED7D491D3BF4530050A2B3 /* WitlessTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		5D989A2C72CE58A7E3DA3EC7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0730;
 				ORGANIZATIONNAME = "The Sneaky Frog";
+				TargetAttributes = {
+					A2ED7D481D3BF4530050A2B3 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
 			};
 			buildConfigurationList = 5D989C0A0357958CE1D91290 /* Build configuration list for PBXProject "Witless" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -118,9 +201,20 @@
 			projectRoot = "";
 			targets = (
 				5D989062D3AFF3491860456F /* Witless */,
+				A2ED7D481D3BF4530050A2B3 /* WitlessTest */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A2ED7D471D3BF4530050A2B3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5D9890E5E566C3878971A365 /* Sources */ = {
@@ -136,7 +230,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A2ED7D451D3BF4530050A2B3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2ED7D5A1D3BF7110050A2B3 /* Rendering.swift in Sources */,
+				A2ED7D4C1D3BF4530050A2B3 /* WitlessTest.swift in Sources */,
+				A2ED7D5E1D3BF7110050A2B3 /* Position.swift in Sources */,
+				A2ED7D5C1D3BF7110050A2B3 /* Path.swift in Sources */,
+				A2ED7D5D1D3BF7110050A2B3 /* Thing.swift in Sources */,
+				A2ED7D5B1D3BF7110050A2B3 /* Board.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A2ED7D591D3BF7030050A2B3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5D989062D3AFF3491860456F /* Witless */;
+			targetProxy = A2ED7D581D3BF7030050A2B3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		5D9890A03CF5E9C4286286D1 /* Release */ = {
@@ -235,6 +350,36 @@
 			};
 			name = Release;
 		};
+		A2ED7D4F1D3BF4530050A2B3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = WitlessTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.disney.dient.WitlessTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A2ED7D501D3BF4530050A2B3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = WitlessTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.disney.dient.WitlessTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -245,12 +390,22 @@
 				5D9890A03CF5E9C4286286D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5D989C0A0357958CE1D91290 /* Build configuration list for PBXProject "Witless" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5D989A7C7B5BBF22A6E9C118 /* Debug */,
 				5D989E5E01317E85906A7A54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A2ED7D4E1D3BF4530050A2B3 /* Build configuration list for PBXNativeTarget "WitlessTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A2ED7D4F1D3BF4530050A2B3 /* Debug */,
+				A2ED7D501D3BF4530050A2B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

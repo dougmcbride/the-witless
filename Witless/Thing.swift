@@ -8,6 +8,10 @@ extension SequenceType where Generator.Element == Thing {
     }
 }
 
+enum ParsingError: ErrorType {
+    case UnknownSymbol
+}
+
 enum Color: String {
     case White = "W"
     case Black = "K"
@@ -24,9 +28,9 @@ enum Thing: Equatable {
     case Square(Color)
     case Triangle(Int)
 
-    static func parse(string: String) -> [[Thing]] {
-        return string.characters.split("/").map {
-            $0.map {
+    static func parse(string: String) throws -> [[Thing]] {
+        return try string.characters.split("/").map {
+            try $0.map {
                 let charString = String($0)
                 switch charString {
                     case "E":
@@ -36,13 +40,22 @@ enum Thing: Equatable {
                     default:
                         let uppercaseString = charString.uppercaseString
                         if uppercaseString == charString {
-                            return .Square(Color(rawValue: uppercaseString)!)
+                        return .Square(try colorForSymbol(charString))
                         } else {
-                            return .Star(Color(rawValue: uppercaseString)!)
+                        return .Star(try colorForSymbol(charString))
+                    }
                         }
                 }
             }
         }
+
+    static private func colorForSymbol(symbol: String) throws -> Color {
+        let uppercaseString = symbol.uppercaseString
+        guard let color = Color(rawValue: uppercaseString) else {
+            throw ParsingError.UnknownSymbol
+        }
+        return color
+
     }
 }
 
