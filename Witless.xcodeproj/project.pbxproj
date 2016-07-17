@@ -14,7 +14,26 @@
 		5D989700A781AAA79CD4A249 /* Thing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989D3399B518CDDF629CE6 /* Thing.swift */; };
 		5D98999725641A51EF7F1EB7 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989F5DE084748BF5ECB104 /* Position.swift */; };
 		A2ED7D4C1D3BF4530050A2B3 /* WitlessTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2ED7D4B1D3BF4530050A2B3 /* WitlessTest.swift */; };
+		A2ED7D521D3BF5770050A2B3 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2ED7D511D3BF5770050A2B3 /* Quick.framework */; };
+		A2ED7D541D3BF5800050A2B3 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2ED7D531D3BF5800050A2B3 /* Nimble.framework */; };
+		A2ED7D561D3BF5A60050A2B3 /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2ED7D531D3BF5800050A2B3 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2ED7D571D3BF5A60050A2B3 /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A2ED7D511D3BF5770050A2B3 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2ED7D5A1D3BF7110050A2B3 /* Rendering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9890AE6828B8CD4AFBB1DB /* Rendering.swift */; };
+		A2ED7D5B1D3BF7110050A2B3 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D98946D778BFBA850F1CDCB /* Board.swift */; };
+		A2ED7D5C1D3BF7110050A2B3 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9899E8026A157C99FB5E5D /* Path.swift */; };
+		A2ED7D5D1D3BF7110050A2B3 /* Thing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989D3399B518CDDF629CE6 /* Thing.swift */; };
+		A2ED7D5E1D3BF7110050A2B3 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989F5DE084748BF5ECB104 /* Position.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A2ED7D581D3BF7030050A2B3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5D989A2C72CE58A7E3DA3EC7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5D989062D3AFF3491860456F;
+			remoteInfo = Witless;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		5D989DF4B9D770E94B9C2C87 /* CopyFiles */ = {
@@ -25,6 +44,17 @@
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		A2ED7D551D3BF58C0050A2B3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A2ED7D561D3BF5A60050A2B3 /* Nimble.framework in CopyFiles */,
+				A2ED7D571D3BF5A60050A2B3 /* Quick.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -39,6 +69,8 @@
 		A2ED7D491D3BF4530050A2B3 /* WitlessTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WitlessTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2ED7D4B1D3BF4530050A2B3 /* WitlessTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WitlessTest.swift; sourceTree = "<group>"; };
 		A2ED7D4D1D3BF4530050A2B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2ED7D511D3BF5770050A2B3 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/Mac/Quick.framework; sourceTree = "<group>"; };
+		A2ED7D531D3BF5800050A2B3 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/Mac/Nimble.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +85,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2ED7D541D3BF5800050A2B3 /* Nimble.framework in Frameworks */,
+				A2ED7D521D3BF5770050A2B3 /* Quick.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +96,8 @@
 		5D989049967680E117563181 = {
 			isa = PBXGroup;
 			children = (
+				A2ED7D531D3BF5800050A2B3 /* Nimble.framework */,
+				A2ED7D511D3BF5770050A2B3 /* Quick.framework */,
 				A2ED7D4A1D3BF4530050A2B3 /* WitlessTest */,
 				5D9898CE21499273B9C3E0DE /* Products */,
 				5D989DF634D390EFBAB7A0FE /* Witless */,
@@ -126,10 +162,12 @@
 				A2ED7D451D3BF4530050A2B3 /* Sources */,
 				A2ED7D461D3BF4530050A2B3 /* Frameworks */,
 				A2ED7D471D3BF4530050A2B3 /* Resources */,
+				A2ED7D551D3BF58C0050A2B3 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A2ED7D591D3BF7030050A2B3 /* PBXTargetDependency */,
 			);
 			name = WitlessTest;
 			productName = WitlessTest;
@@ -196,11 +234,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2ED7D5A1D3BF7110050A2B3 /* Rendering.swift in Sources */,
 				A2ED7D4C1D3BF4530050A2B3 /* WitlessTest.swift in Sources */,
+				A2ED7D5E1D3BF7110050A2B3 /* Position.swift in Sources */,
+				A2ED7D5C1D3BF7110050A2B3 /* Path.swift in Sources */,
+				A2ED7D5D1D3BF7110050A2B3 /* Thing.swift in Sources */,
+				A2ED7D5B1D3BF7110050A2B3 /* Board.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A2ED7D591D3BF7030050A2B3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5D989062D3AFF3491860456F /* Witless */;
+			targetProxy = A2ED7D581D3BF7030050A2B3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		5D9890A03CF5E9C4286286D1 /* Release */ = {
@@ -303,6 +354,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = WitlessTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.disney.dient.WitlessTest;
@@ -314,6 +369,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = WitlessTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.disney.dient.WitlessTest;
@@ -349,6 +408,7 @@
 				A2ED7D501D3BF4530050A2B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

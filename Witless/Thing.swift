@@ -8,6 +8,10 @@ extension SequenceType where Generator.Element == Thing {
     }
 }
 
+enum ParsingError: ErrorType {
+    case UnknownSymbol
+}
+
 enum Color: String {
     case White = "W"
     case Black = "K"
@@ -23,35 +27,44 @@ enum Thing: Equatable {
     case Star(Color)
     case Square(Color)
 
-    static func parse(string: String) -> [[Thing]] {
-        return string.characters.split("/").map {
-            $0.map {
+    static func parse(string: String) throws -> [[Thing]] {
+        return try string.characters.split("/").map {
+            try $0.map {
                 let charString = String($0)
                 switch charString {
-                    case "E":
-                        return .Empty
-                    default:
-                        let uppercaseString = charString.uppercaseString
-                        if uppercaseString == charString {
-                            return .Square(Color(rawValue: uppercaseString)!)
-                        } else {
-                            return .Star(Color(rawValue: uppercaseString)!)
-                        }
+                case "E":
+                    return .Empty
+                default:
+                    let uppercaseString = charString.uppercaseString
+                    if uppercaseString == charString {
+                        return .Square(try colorForSymbol(charString))
+                    } else {
+                        return .Star(try colorForSymbol(charString))
+                    }
                 }
             }
         }
+    }
+
+    static private func colorForSymbol(symbol: String) throws -> Color {
+        let uppercaseString = symbol.uppercaseString
+        guard let color = Color(rawValue: uppercaseString) else {
+            throw ParsingError.UnknownSymbol
+        }
+        return color
+
     }
 }
 
 func ==(a: Thing, b: Thing) -> Bool {
     switch (a, b) {
-        case (.Empty, .Empty):
-            return true
-        case (.Star(let c1), .Star(let c2)):
-            return c1 == c2
-        case (.Square(let c1), .Square(let c2)):
-            return c1 == c2
-        default:
-            return false
+    case (.Empty, .Empty):
+        return true
+    case (.Star(let c1), .Star(let c2)):
+        return c1 == c2
+    case (.Square(let c1), .Square(let c2)):
+        return c1 == c2
+    default:
+        return false
     }
 }

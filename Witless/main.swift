@@ -9,7 +9,7 @@ let boardThings: [[Thing]] = [
  ]
 
 // This is shorthand for the above
-let things = Thing.parse("bEEB/WWbE/BEWE/EBWb")
+let things = try Thing.parse("bEEB/WWbE/BEWE/EBWb")
 
 let startingBoard = Board(start: Position(2, 4), end: Position(4, 0),
                           things: things)
