@@ -7,11 +7,7 @@ protocol Renderer {
 }
 
 func *(string: String, times: Int) -> String {
-    var s = ""
-    for _ in 0 ..< times {
-        s += string
-    }
-    return s
+    return String(count: times, repeatedValue: Character(string))
 }
 
 struct ASCIIRenderer: Renderer {
@@ -32,6 +28,8 @@ struct ASCIIRenderer: Renderer {
                         square = "[\(color.rawValue)]"
                     case .Star(let color):
                         square = "*\(color.rawValue)*"
+                    case .Triangle(let number):
+                        square = "^\(number)^"
                 }
 
                 print(square, terminator: "")

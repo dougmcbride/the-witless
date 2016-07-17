@@ -9,15 +9,20 @@ let boardThings: [[Thing]] = [
  ]
 
 // This is shorthand for the above
-let things = Thing.parse("bEEB/WWbE/BEWE/EBWb")
+//let things = Thing.parse("EEEEE/WBEEE/BEWBB/EEEEE/WBEEE")
+let things = Thing.parse("EEEEEE/222222/EEEEEE/111111/EEEEEE/222222")
 
-let startingBoard = Board(start: Position(2, 4), end: Position(4, 0),
-                          things: things)
+let startingBoard = Board(start: Position(3, 6), end: Position(3, 0), things: things, wrapHorizontal: true)
+//let startingBoard = Board(width: 6, height: 6,
+//                          startPositions: [Position(0, 5)],
+//                          endPositions: [Position(5, 0), Position(5, 5)],
+//                          path: Path(),
+//                          things: things)
 
 let solutionBoards = startingBoard.successfulBoards()
 print("Found \(solutionBoards.count) possible solutions")
 
-if let solution = solutionBoards.first {
-    ASCIIRenderer().drawBoard(solution)
+for board in  solutionBoards {
+    ASCIIRenderer().drawBoard(board)
 }
 

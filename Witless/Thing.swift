@@ -22,6 +22,7 @@ enum Thing: Equatable {
     case Empty
     case Star(Color)
     case Square(Color)
+    case Triangle(Int)
 
     static func parse(string: String) -> [[Thing]] {
         return string.characters.split("/").map {
@@ -30,6 +31,8 @@ enum Thing: Equatable {
                 switch charString {
                     case "E":
                         return .Empty
+                    case "1", "2", "3":
+                        return .Triangle(Int(charString)!)
                     default:
                         let uppercaseString = charString.uppercaseString
                         if uppercaseString == charString {
