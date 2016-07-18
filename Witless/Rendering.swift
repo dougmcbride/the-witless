@@ -43,7 +43,7 @@ struct ASCIIRenderer: Renderer {
     }
 
     private func printColumnSeparator(board: Board, row: Int, column: Int) {
-        if board.path.moves.contains({
+        if board.path.segments.contains({
             if !($0.from.x == column + 1 && $0.to.x == column + 1) {
                 return false
             }
@@ -64,8 +64,8 @@ struct ASCIIRenderer: Renderer {
         let vMarker = "#"
         let hMarker = "#####"
 
-        for move in board.path.moves where move.from.y == row && move.to.y == row {
-            let startIndex = line.startIndex.advancedBy(1 + min(move.to.x, move.from.x) * 4)
+        for segment in board.path.segments where segment.from.y == row && segment.to.y == row {
+            let startIndex = line.startIndex.advancedBy(1 + min(segment.to.x, segment.from.x) * 4)
             let endIndex = startIndex.advancedBy(hMarker.characters.count)
             line.replaceRange(startIndex ..< endIndex, with: hMarker)
         }

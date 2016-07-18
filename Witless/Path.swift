@@ -3,24 +3,36 @@
 import Foundation
 
 struct Path {
+    let startPosition: Position
+    let moves: [Move]
     let positions: [Position]
+    let segments: [Segment]
+//    let width: Int
 
-    init(positions: [Position] = []) {
-        self.positions = positions
+    init(startPosition: Position, moves: [Move], width: Int) {
+        self.startPosition = startPosition
+        self.moves = moves
+        self.width = width
+        self.positions = moves.reduce([startPosition]) {
+            running, direction in
+            let nextPosition = running.last!.positionByMoving(direction)
+            return running + [nextPosition]
+        }
+        self.segments = zip(positions.dropLast(), moves).reduce([]) {
+            running, tuple in
+            let (position, move) = tuple
+            return running + [position.effectiveSegmentForMove(move, width: width)]
+        }
     }
 
-    var moves: [Move] {
-        let length = positions.count - 1
+    init(startPosition: Position, movesString: String, width: Int) {
+        self.init(startPosition: startPosition, moves: movesString.characters.map {
+            Move(rawValue: String($0))!
+        }, width: width)
+    }
 
-        if length < 0 {
-            return []
-        }
-
-        let prefix = positions.prefix(length)
-        let suffix = positions.suffix(length)
-        return zip(prefix, suffix).map {
-            Move(from: $0.0, to: $0.1)
-        }
+    init(startPosition: Position, width: Int) {
+        self.init(startPosition: startPosition, moves: [], width: width)
     }
 
     func contains(position: Position) -> Bool {
@@ -29,9 +41,21 @@ struct Path {
         }
     }
 
-    func add(position: Position) -> Path {
-        var newPositions = positions
-        newPositions.append(position)
-        return Path(positions: newPositions)
+    func pathAddingMove(move: Move) -> Path {
+        return Path(startPosition: startPosition, moves: moves + [move], width: width)
     }
+
+    func doesNotIntersectItselfByMoving(move: Move) -> Bool {
+        guard let lastPosition = positions.last else {
+            return true
+        }
+        let position = lastPosition.positionByMoving(move).validPosition(<#width: Int#>, height: <#Int#>)
+        return
+
+    }
+}
+
+func ==(p1: Path, p2: Path) -> Bool {
+    return p1.startPosition == p2.startPosition &&
+            p1.moves == p2.moves
 }

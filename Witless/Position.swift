@@ -4,17 +4,74 @@ import Foundation
 
 typealias Region = Set<Position>
 
-struct Move {
+struct Segment {
     let from, to: Position
+}
+
+enum Move: String {
+    case Up = "U"
+    case Down = "D"
+    case Left = "L"
+    case Right = "R"
+
+    static let allMoves: [Move] = [.Up, .Down, .Left, .Right]
 }
 
 struct Position {
     let x: Int
     let y: Int
+    let width: Int
+    let height: Int
 
-    init(_ x: Int, _ y: Int) {
+    init(_ x: Int, _ y: Int, width: Int, height: Int) {
         self.x = x
         self.y = y
+        self.width = width
+        self.height = height
+    }
+
+    func positionByMoving(move: Move) -> Position {
+        let position: Position
+        switch move {
+            case .Down:
+                position = makePosition(x, y + 1)
+            case .Up:
+                position = makePosition(x, y - 1)
+            case .Left:
+                position = makePosition(x - 1, y)
+            case .Right:
+                position = makePosition(x + 1, y)
+        }
+
+        return position
+    }
+
+    private func makePosition(_ x: Int, _ y: Int) -> Position {
+        return Position(x, y, width: width, height: height)
+    }
+
+    func effectiveSegmentForMove(move: Move, width: Int) -> Segment {
+        let effectivePosition: Position
+
+        switch (move, width) {
+            case (.Left, 0):
+                effectivePosition = Position(width, y)
+            default:
+                effectivePosition = self
+        }
+
+        return Segment(from: effectivePosition, to: effectivePosition.positionByMoving(move))
+    }
+
+    func validPosition(width: Int, height: Int, wrapping: Bool = false) -> Position? {
+        let xRange = wrapping ? (-1 ..< width) : 0 ..< width
+        let effectiveWidth = wrapping ? width - 1 : width
+        if xRange.contains(x) && (0 ..< height).contains(y) {
+            let answer = Position((x + effectiveWidth) % effectiveWidth, y)
+            return answer
+        }
+
+        return nil
     }
 }
 

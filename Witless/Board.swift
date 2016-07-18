@@ -22,7 +22,13 @@ struct Board {
     }
 
     init(width: Int, height: Int, start: Position, end: Position, things: [[Thing]], wrapHorizontal: Bool = false) {
-        self.init(width: width, height: height, startPositions: [start], endPositions: [end], path: Path(positions: [start]), things: things, wrapHorizontal: wrapHorizontal)
+        self.init(width: width,
+                  height: height,
+                  startPositions: [start],
+                  endPositions: [end],
+                  path: Path(startPosition: start, width: width),
+                  things: things,
+                  wrapHorizontal: wrapHorizontal)
     }
 
     init(width: Int, height: Int, startPositions: [Position], endPositions: [Position], path: Path, things: [[Thing]], wrapHorizontal: Bool = false) {
@@ -36,71 +42,43 @@ struct Board {
     }
 
     func possibleBoards() -> [Board] {
-        guard let lastMove = path.positions.last else {
-            return startingMoves().map {
-                move($0)
+        guard let lastPosition = path.positions.last else {
+            return startingPaths().map {
+                Board(width: width, height: height, startPositions: startPositions, endPositions: endPositions, path: $0, things: things)
             }
         }
 
-        let moves = possibleMovesFrom(lastMove).filter {
-            move in
-            return !path.contains(move)
+        return possibleMovesFrom(lastPosition)
+        .filter {
+            return path.doesNotIntersectItselfByMoving($0)
         }
-
-        return moves.map {
-            move($0)
+        .map {
+            boardByAddingMove($0)
         }
     }
 
     func possibleAdjacentsFrom(p: Position) -> [Position] {
-        return [
-                Position(p.x - 1, p.y),
-                Position(p.x + 1, p.y),
-                Position(p.x, p.y - 1),
-                Position(p.x, p.y + 1),
-        ].filter {
+        return Move.allMoves
+        .map {
+            p.positionByMoving($0)
+        }
+        .filter {
             return (0 ..< width - 1).contains($0.x) && (0 ..< height - 1).contains($0.y)
         }
     }
 
-    func possibleMovesFrom(p: Position) -> [Position] {
-        return [
-                Position(p.x - 1, p.y),
-                Position(p.x + 1, p.y),
-                Position(p.x, p.y - 1),
-                Position(p.x, p.y + 1),
-        ].flatMap {
-            validPosition($0)
-
-//            proposedPosition in
-//            isValidPosition(proposedPosition) && !path.positions.contains {
-//                existingPosition in
-//                proposedPosition.x == existingPosition.y && proposedPosition.y == existingPosition.x
-//            }
-        }
-    }
-
-    private func startingMoves() -> [Position] {
-        return startPositions.flatMap {
-            self.possibleMovesFrom($0)
-        }
+    func possibleMovesFrom(p: Position) -> [Move] {
+        return Move.allMoves.filter { p.positionByMoving($0).validPosition(width, height: height, wrapping: wrapHorizontal) != nil }
     }
 
     func startingPaths() -> [Path] {
-        return startingMoves().map({ Path(positions: [$0]) })
-    }
-
-    func validPosition(p: Position) -> Position? {
-        let xRange = wrapHorizontal ? (-1 ..< width + 1) : 0 ..< width
-        if xRange.contains(p.x) && (0 ..< height).contains(p.y) {
-            return Position((p.x + width) % width, p.y)
+        return startPositions.flatMap {
+            Path(startPosition: $0, moves: self.possibleMovesFrom($0), width: width)
         }
-
-        return nil
     }
 
-    func move(move: Position) -> Board {
-        let newPath = path.add(move)
+    func boardByAddingMove(move: Move) -> Board {
+        let newPath = path.pathAddingMove(move)
         return Board(width: width, height: height, startPositions: startPositions, endPositions: endPositions, path: newPath, things: things)
     }
 
@@ -153,8 +131,6 @@ struct Board {
             }
         }
 
-//        ASCIIRenderer().drawBoard(self)
-//        ASCIIRenderer().drawBoard(self, regionMap: r)
         return true
     }
 
@@ -209,11 +185,11 @@ struct Board {
                 }
             }()
 
-            return !path.moves.contains {
-                move in
+            return !path.segments.contains {
+                segment in
                 let p1 = Position(px, py)
                 let p2 = Position(px + targetDelta.0, py + targetDelta.1)
-                return (move.from == p1 && move.to == p2) || (move.from == p2 && move.to == p1)
+                return (segment.from == p1 && segment.to == p2) || (segment.from == p2 && segment.to == p1)
             }
         }
 
