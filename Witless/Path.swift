@@ -7,12 +7,10 @@ struct Path {
     let moves: [Move]
     let positions: [Position]
     let segments: [Segment]
-//    let width: Int
 
-    init(startPosition: Position, moves: [Move], width: Int) {
+    init(startPosition: Position, moves: [Move]) {
         self.startPosition = startPosition
         self.moves = moves
-        self.width = width
         self.positions = moves.reduce([startPosition]) {
             running, direction in
             let nextPosition = running.last!.positionByMoving(direction)
@@ -21,18 +19,18 @@ struct Path {
         self.segments = zip(positions.dropLast(), moves).reduce([]) {
             running, tuple in
             let (position, move) = tuple
-            return running + [position.effectiveSegmentForMove(move, width: width)]
+            return running + [position.effectiveSegmentForMove(move)]
         }
     }
 
-    init(startPosition: Position, movesString: String, width: Int) {
+    init(startPosition: Position, movesString: String) {
         self.init(startPosition: startPosition, moves: movesString.characters.map {
             Move(rawValue: String($0))!
-        }, width: width)
+        })
     }
 
-    init(startPosition: Position, width: Int) {
-        self.init(startPosition: startPosition, moves: [], width: width)
+    init(startPosition: Position) {
+        self.init(startPosition: startPosition, moves: [])
     }
 
     func contains(position: Position) -> Bool {
@@ -42,16 +40,15 @@ struct Path {
     }
 
     func pathAddingMove(move: Move) -> Path {
-        return Path(startPosition: startPosition, moves: moves + [move], width: width)
+        return Path(startPosition: startPosition, moves: moves + [move])
     }
 
     func doesNotIntersectItselfByMoving(move: Move) -> Bool {
         guard let lastPosition = positions.last else {
             return true
         }
-        let position = lastPosition.positionByMoving(move).validPosition(<#width: Int#>, height: <#Int#>)
-        return
 
+        return !positions.contains(lastPosition.positionByMoving(move))
     }
 }
 

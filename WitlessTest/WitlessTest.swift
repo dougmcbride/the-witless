@@ -10,7 +10,7 @@ func containMoves(startPosition: Position, movesString: String) -> NonNilMatcher
         guard let boards_:[Board] = try! boards.evaluate() else {
             return false
         }
-        return boards_.map{$0.path}.contains{$0 == Path(startPosition: startPosition, movesString: movesString, width: boards_.first!.width)}
+        return boards_.map{$0.path}.contains{$0 == Path(startPosition: startPosition, movesString: movesString)}
     }
 }
 
@@ -32,11 +32,10 @@ func beMoves(startPosition: Position, moves: [String]) -> NonNilMatcherFunc<[Boa
 
 class SquareSpec: QuickSpec {
     override func spec() {
-        /*
         describe("A simple square board") {
             it("has two solutions") {
-                let startPosition = Position(0, 0)
-                let board = Board(start: startPosition, end: Position(1, 1), things: [[.Empty]])
+                let startPosition = Position(0, 0, width:2, height:2)
+                let board = Board(start: startPosition, end: Position(1, 1, width:1, height:1), things: [[.Empty]])
                 let solutions = board.successfulBoards()
                 expect(solutions).to(beMoves(startPosition, moves: ["RD", "DR"]))
             }
@@ -44,8 +43,8 @@ class SquareSpec: QuickSpec {
 
         describe("a simple black/white square board") {
             it("has two solutions") {
-                let startPosition = Position(0, 0)
-                let board = Board(start: startPosition, end: Position(2, 0), things: [[.Square(.Black), .Square(.White)]])
+                let startPosition = Position(0, 0, width: 3, height: 2)
+                let board = Board(start: startPosition, end: Position(2, 0, width: 3, height: 2), things: [[.Square(.Black), .Square(.White)]])
                 let solutions = board.successfulBoards()
                 expect(solutions).to(beMoves(startPosition, moves: ["RDRU", "DRUR"]))
             }
@@ -61,18 +60,17 @@ class SquareSpec: QuickSpec {
             let things = try! Thing.parse("BWB/BWB/BWB")
 
             context("without wrapping") {
-                let board = Board(start: Position(0, 3), end: Position(0, 0), things: things)
+                let board = Board(start: Position(0, 3, width: 4, height: 4), end: Position(0, 0, width: 4, height: 4), things: things)
                 it("can't be solved") {
                     expect(board.successfulBoards()).to(beEmpty())
                 }
             }
         }
-        */
 
         describe("a 2x1 board with horizontal wrapping") {
             it("has four solutions") {
-                let startPosition = Position(0, 1)
-                let board = Board(start: startPosition, end: Position(1, 0), things: [[.Empty, .Empty]], wrapHorizontal: true)
+                let startPosition = Position(0, 1, width: 3, height: 2)
+                let board = Board(start: startPosition, end: Position(1, 0, width: 3, height: 2), things: [[.Empty, .Empty]], wrapHorizontal: true)
                 let successfulBoards = board.successfulBoards()
                 expect(successfulBoards).to(beMoves(startPosition, moves: ["UR", "RU", "LU", "UL"]))
 

@@ -46,16 +46,16 @@ struct Position {
         return position
     }
 
-    private func makePosition(_ x: Int, _ y: Int) -> Position {
+    private func makePosition(x: Int, _ y: Int) -> Position {
         return Position(x, y, width: width, height: height)
     }
 
-    func effectiveSegmentForMove(move: Move, width: Int) -> Segment {
+    func effectiveSegmentForMove(move: Move) -> Segment {
         let effectivePosition: Position
 
-        switch (move, width) {
+        switch (move, x) {
             case (.Left, 0):
-                effectivePosition = Position(width, y)
+                effectivePosition = Position(width, y, width: width, height: height)
             default:
                 effectivePosition = self
         }
@@ -67,7 +67,7 @@ struct Position {
         let xRange = wrapping ? (-1 ..< width) : 0 ..< width
         let effectiveWidth = wrapping ? width - 1 : width
         if xRange.contains(x) && (0 ..< height).contains(y) {
-            let answer = Position((x + effectiveWidth) % effectiveWidth, y)
+            let answer = Position((x + effectiveWidth) % effectiveWidth, y, width: width, height: height)
             return answer
         }
 

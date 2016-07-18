@@ -26,7 +26,7 @@ struct Board {
                   height: height,
                   startPositions: [start],
                   endPositions: [end],
-                  path: Path(startPosition: start, width: width),
+                  path: Path(startPosition: start),
                   things: things,
                   wrapHorizontal: wrapHorizontal)
     }
@@ -73,7 +73,7 @@ struct Board {
 
     func startingPaths() -> [Path] {
         return startPositions.flatMap {
-            Path(startPosition: $0, moves: self.possibleMovesFrom($0), width: width)
+            Path(startPosition: $0, moves: self.possibleMovesFrom($0))
         }
     }
 
@@ -152,7 +152,7 @@ struct Board {
 
         for x in 0 ..< (width - 1) {
             for y in 0 ..< (height - 1) {
-                let p = Position(x, y)
+                let p = Position(x, y, width: width, height: height)
                 if regionMap[p] != nil {
                     continue
                 }
@@ -187,8 +187,8 @@ struct Board {
 
             return !path.segments.contains {
                 segment in
-                let p1 = Position(px, py)
-                let p2 = Position(px + targetDelta.0, py + targetDelta.1)
+                let p1 = Position(px, py, width: width, height: height)
+                let p2 = Position(px + targetDelta.0, py + targetDelta.1, width: width, height: height)
                 return (segment.from == p1 && segment.to == p2) || (segment.from == p2 && segment.to == p1)
             }
         }
