@@ -4,8 +4,12 @@ import Foundation
 
 typealias Region = Set<Position>
 
-struct Segment {
+struct Segment: Equatable {
     let from, to: Position
+}
+
+func ==(s1:Segment, s2:Segment) -> Bool {
+    return s1.from == s2.from && s1.to == s2.to
 }
 
 enum Move: String {
@@ -17,21 +21,35 @@ enum Move: String {
     static let allMoves: [Move] = [.Up, .Down, .Left, .Right]
 }
 
+struct RawPosition {
+    let x: Int
+    let y: Int
+    init(_ x: Int, _ y: Int) {
+        self.x = x
+        self.y = y
+    }
+}
+
 struct Position {
     let x: Int
     let y: Int
     let width: Int
     let height: Int
+    let xWrapping: Bool
+    var rawPosition: RawPosition {
+        return RawPosition(x, y)
+    }
 
-    init(_ x: Int, _ y: Int, width: Int, height: Int) {
+    init(_ x: Int, _ y: Int, width: Int, height: Int, xWrapping: Bool) {
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        self.xWrapping = xWrapping
     }
 
-    func positionByMoving(move: Move) -> Position {
-        let position: Position
+    func positionByMoving(move: Move) -> Position? {
+        let position: Position?
         switch move {
             case .Down:
                 position = makePosition(x, y + 1)
@@ -46,8 +64,14 @@ struct Position {
         return position
     }
 
-    private func makePosition(x: Int, _ y: Int) -> Position {
-        return Position(x, y, width: width, height: height)
+    private func makePosition(x: Int, _ y: Int) -> Position? {
+        let xRange = xWrapping ? (-1 ..< width) : 0 ..< width
+        if xRange.contains(x) && (0 ..< height).contains(y) {
+            let answer = Position((x + width) % width, y, width: width, height: height, xWrapping: xWrapping)
+            return answer
+        }
+
+        return nil
     }
 
     func effectiveSegmentForMove(move: Move) -> Segment {
@@ -55,23 +79,12 @@ struct Position {
 
         switch (move, x) {
             case (.Left, 0):
-                effectivePosition = Position(width, y, width: width, height: height)
+                effectivePosition = Position(width, y, width: width, height: height, xWrapping: xWrapping)
             default:
                 effectivePosition = self
         }
 
-        return Segment(from: effectivePosition, to: effectivePosition.positionByMoving(move))
-    }
-
-    func validPosition(width: Int, height: Int, wrapping: Bool = false) -> Position? {
-        let xRange = wrapping ? (-1 ..< width) : 0 ..< width
-        let effectiveWidth = wrapping ? width - 1 : width
-        if xRange.contains(x) && (0 ..< height).contains(y) {
-            let answer = Position((x + effectiveWidth) % effectiveWidth, y, width: width, height: height)
-            return answer
-        }
-
-        return nil
+        return Segment(from: effectivePosition, to: effectivePosition.positionByMoving(move)!)
     }
 }
 

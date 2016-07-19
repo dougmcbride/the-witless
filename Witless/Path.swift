@@ -13,7 +13,7 @@ struct Path {
         self.moves = moves
         self.positions = moves.reduce([startPosition]) {
             running, direction in
-            let nextPosition = running.last!.positionByMoving(direction)
+            let nextPosition = running.last!.positionByMoving(direction)!
             return running + [nextPosition]
         }
         self.segments = zip(positions.dropLast(), moves).reduce([]) {
@@ -43,12 +43,12 @@ struct Path {
         return Path(startPosition: startPosition, moves: moves + [move])
     }
 
-    func doesNotIntersectItselfByMoving(move: Move) -> Bool {
+    func doesNotIntersectItselfByAddingMove(move: Move) -> Bool {
         guard let lastPosition = positions.last else {
             return true
         }
 
-        return !positions.contains(lastPosition.positionByMoving(move))
+        return !positions.contains(lastPosition.positionByMoving(move)!)
     }
 }
 

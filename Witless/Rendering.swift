@@ -43,11 +43,11 @@ struct ASCIIRenderer: Renderer {
     }
 
     private func printColumnSeparator(board: Board, row: Int, column: Int) {
-        if board.path.segments.contains({
-            if !($0.from.x == column + 1 && $0.to.x == column + 1) {
+        if board.path.segments.contains({ segment in
+            if !(segment.from.x == column + 1 && segment.to.x == column + 1) {
                 return false
             }
-            return (($0.from.y == row && $0.to.y == row + 1) || ($0.to.y == row && $0.from.y == row + 1))
+            return ((segment.from.y == row && segment.to.y == row + 1) || (segment.to.y == row && segment.from.y == row + 1))
         }) {
             print("#", terminator: "")
         } else {
