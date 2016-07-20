@@ -5,7 +5,7 @@ struct Board {
     let height: Int
     let startPositions: [Position]
     let endPositions: [Position]
-    let path: Path
+    let path: Path?
     let things: [[Thing]]
     let xWrapping: Bool
 
@@ -18,26 +18,24 @@ struct Board {
     }
 
     init(start: RawPosition, end: RawPosition, things: [[Thing]], wrapHorizontal: Bool = false) {
+        self.init(rawStartPositions: [start], rawEndPositions: [end], things: things, wrapHorizontal: wrapHorizontal)
+    }
+
+    init(rawStartPositions: [RawPosition], rawEndPositions: [RawPosition], things: [[Thing]], wrapHorizontal: Bool = false) {
         let widthAdjustment = wrapHorizontal ? 0 : 1
         let width = things.first!.count + widthAdjustment
         let height = things.count + 1
-        let startPosition = Position(start.x, start.y, width: width, height: height, xWrapping: wrapHorizontal)
-        let endPosition = Position(end.x, end.y, width: width, height: height, xWrapping: wrapHorizontal)
+        let rawToFull: RawPosition -> Position = {
+            Position($0.x, $0.y, width: width, height: height, xWrapping: wrapHorizontal)
+        }
+
+        let startPositions = rawStartPositions.map(rawToFull)
+        let endPositions = rawEndPositions.map(rawToFull)
         self.init(width: width, height: height,
-                  start: startPosition, end: endPosition, things: things, wrapHorizontal: wrapHorizontal)
+                  startPositions: startPositions, endPositions: endPositions, path: nil, things: things, wrapHorizontal: wrapHorizontal)
     }
 
-    init(width: Int, height: Int, start: Position, end: Position, things: [[Thing]], wrapHorizontal: Bool = false) {
-        self.init(width: width,
-                  height: height,
-                  startPositions: [start],
-                  endPositions: [end],
-                  path: Path(startPosition: start),
-                  things: things,
-                  wrapHorizontal: wrapHorizontal)
-    }
-
-    init(width: Int, height: Int, startPositions: [Position], endPositions: [Position], path: Path, things: [[Thing]], wrapHorizontal: Bool) {
+    init(width: Int, height: Int, startPositions: [Position], endPositions: [Position], path: Path?, things: [[Thing]], wrapHorizontal: Bool) {
         self.width = width
         self.height = height
         self.path = path
@@ -52,15 +50,17 @@ struct Board {
     }
 
     func possibleBoards() -> [Board] {
-        guard let lastPosition = path.positions.last else {
+        guard let lastPosition = path?.positions.last else {
             return startingPaths().map {
-                Board(width: width, height: height, startPositions: startPositions, endPositions: endPositions, path: $0, things: things, wrapHorizontal: xWrapping)
+                Board(width: width, height: height,
+                      startPositions: startPositions, endPositions: endPositions,
+                      path: $0, things: things, wrapHorizontal: xWrapping)
             }
         }
 
         return possibleMovesFrom(lastPosition)
         .filter {
-            return path.doesNotIntersectItselfByAddingMove($0)
+            return path!.doesNotIntersectItselfByAddingMove($0)
         }
         .map {
             boardByAddingMove($0)
@@ -75,22 +75,25 @@ struct Board {
     }
 
     private func possibleMovesFrom(p: Position) -> [Move] {
-        return Move.allMoves.filter { p.positionByMoving($0) != nil }
+        let moves = Move.allMoves.filter {
+            p.positionByMoving($0) != nil
+        }
+        return moves
     }
 
     private func startingPaths() -> [Path] {
-        return startPositions.flatMap {
-            Path(startPosition: $0, moves: self.possibleMovesFrom($0))
+        return startPositions.flatMap { p -> [Path] in
+            self.possibleMovesFrom(p).map {Path(startPosition: p, moves: [$0])}
         }
     }
 
-    func boardByAddingMove(move: Move) -> Board {
-        let newPath = path.pathAddingMove(move)
+    private func boardByAddingMove(move: Move) -> Board {
+        let newPath = path!.pathAddingMove(move)
         return Board(width: width, height: height, startPositions: startPositions, endPositions: endPositions, path: newPath, things: things, wrapHorizontal: xWrapping)
     }
 
     var succeeded: Bool {
-        guard let lastMove = path.positions.last else {
+        guard let lastMove = path?.positions.last else {
             return false
         }
 
@@ -100,43 +103,48 @@ struct Board {
             return false
         }
 
-        for regionContents in regionThings() {
-            var checkedSquares = false
+        if things
+        .reduce([], combine: {(a:[Thing], b:[Thing]) -> [Thing] in a + b})
+        .contains({(a:Thing) -> Bool in a.caresAboutRegions}) {
+            for regionContents in regionThings() {
+                var checkedSquares = false
 
-            for thing in regionContents {
-                switch thing {
-                    case .Square(let color):
-                        if checkedSquares {
-                            break
-                        }
-                        checkedSquares = true
-                        if regionContents.contains({
-                            if case .Square(let c) = $0 where c != color {
-                                return true
-                            } else {
+                for thing in regionContents {
+                    switch thing {
+                        case .Square(let color):
+                            if checkedSquares {
+                                break
+                            }
+                            checkedSquares = true
+                            if regionContents.contains({
+                                if case .Square(let c) = $0 where c != color {
+                                    return true
+                                } else {
+                                    return false
+                                }
+                            }) {
                                 return false
                             }
-                        }) {
-                            return false
-                        }
-                    case .Star(let color):
-                        switch (regionContents.countThing(.Star(color)), regionContents.countThing(.Square(color))) {
-                            case (0, _):
-                                break
-                            case (1, 1):
-                                break
-                            case (1, _):
-                                return false
-                            case (2, 0):
-                                break
-                            default:
-                                return false
-                        }
-                    case .Triangle, .Empty:
-                        break
+                        case .Star(let color):
+                            switch (regionContents.countThing(.Star(color)), regionContents.countThing(.Square(color))) {
+                                case (0, _):
+                                    break
+                                case (1, 1):
+                                    break
+                                case (1, _):
+                                    return false
+                                case (2, 0):
+                                    break
+                                default:
+                                    return false
+                            }
+                        case .Triangle, .Empty:
+                            break
+                    }
                 }
             }
         }
+
 
         return true
     }
@@ -192,7 +200,7 @@ struct Board {
                 }
             }()
 
-            return !path.segments.contains {
+            return !path!.segments.contains {
                 segment in
                 let p1 = Position(px, py, width: width, height: height, xWrapping: xWrapping)
                 let p2 = Position(px + targetDelta.0, py + targetDelta.1, width: width, height: height, xWrapping: xWrapping)

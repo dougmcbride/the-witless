@@ -8,6 +8,10 @@ struct Path {
     let positions: [Position]
     let segments: [Segment]
 
+    var movesString: String {
+        return moves.map{$0.rawValue}.joinWithSeparator("")
+    }
+
     init(startPosition: Position, moves: [Move]) {
         self.startPosition = startPosition
         self.moves = moves

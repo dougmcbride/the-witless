@@ -55,7 +55,15 @@ enum Thing: Equatable {
             throw ParsingError.UnknownSymbol
         }
         return color
+    }
 
+    var caresAboutRegions: Bool {
+        switch self {
+            case .Square, .Star:
+                return true
+            default:
+                return false
+        }
     }
 }
 

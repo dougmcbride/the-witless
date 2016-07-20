@@ -11,7 +11,7 @@ func containMoves(startRawPosition: RawPosition, movesString: String) -> NonNilM
             return false
         }
         let startPosition = boards_.first!.position(startRawPosition.x, startRawPosition.y)
-        return boards_.map{$0.path}.contains{$0 == Path(startPosition: startPosition, movesString: movesString)}
+        return boards_.map{$0.path!}.contains{$0 == Path(startPosition: startPosition, movesString: movesString)}
     }
 }
 
@@ -72,7 +72,7 @@ class PathSpec: QuickSpec {
     }
 }
 
-class SquareSpec: QuickSpec {
+class SolutionSpec: QuickSpec {
     override func spec() {
         describe("A simple square board") {
             it("has two solutions") {
@@ -109,6 +109,7 @@ class SquareSpec: QuickSpec {
             }
         }
 
+        /*
         describe("a 2x1 board with horizontal wrapping") {
             it("has four solutions") {
                 let startPosition = RawPosition(0, 1)
@@ -120,9 +121,10 @@ class SquareSpec: QuickSpec {
                 let renderer = ASCIIRenderer()
                 for solution in successfulBoards {
                     renderer.drawBoard(solution)
-                    print(solution.path.moves)
+                    print(solution.path!.moves)
                 }
             }
         }
+        */
     }
 }
