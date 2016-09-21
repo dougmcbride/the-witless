@@ -59,11 +59,14 @@ struct Board {
         }
 
         return possibleMovesFrom(lastPosition)
-        .filter {
-            return path!.doesNotIntersectItselfByAddingMove($0)
-        }
-        .map {
-            boardByAddingMove($0)
+            .filter {
+                return path!.doesNotIntersectItselfByAddingMove($0)
+            }
+            .map {
+                boardByAddingMove($0)
+            }
+            .filter {
+                !$0.trianglesAreOverwhelmed()
         }
     }
 
@@ -145,12 +148,49 @@ struct Board {
             }
         }
 
+        if trianglesAreUnhappy() {
+            return false
+        }
 
         return true
     }
 
+    private func trianglesAreUnhappy() -> Bool {
+        for y in 0 ..< thingHeight {
+            for x in 0 ..< thingWidth {
+                if case .Triangle(let number) = things[y][x] {
+                    let borderingSegments = position(x, y).borderingSegments.intersect(path!.segments).count
+                    if borderingSegments != number {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    private func trianglesAreOverwhelmed() -> Bool {
+        for y in 0 ..< thingHeight {
+            for x in 0 ..< thingWidth {
+                if case .Triangle(let number) = things[y][x] {
+//                    let foo = {$0.positions.map{"(\($0.x),\($0.y))"}}
+                    let borderingSegments = position(x, y).borderingSegments.intersect(path!.segments)
+//                    print("position(x,y).borderingSegments = \(position(x, y).borderingSegments.map({$0.positions.map{"(\($0.x),\($0.y))"}}))")
+//                    print("path!.segments = \(path!.segments.map({$0.positions.map{"(\($0.x),\($0.y))"}}))")
+//                    print("borderingSegments = \(borderingSegments.map({$0.positions.map{"(\($0.x),\($0.y))"}}))")
+                if borderingSegments.count > number {
+                    print("killing path \(path!.movesString)")
+                    return true
+                }
+                }
+            }
+        }
+        return false
+    }
+
+
     var failed: Bool {
-        return possibleBoards().isEmpty
+        return possibleBoards().isEmpty || trianglesAreOverwhelmed()
     }
 
     func regionThings() -> [[Thing]] {
@@ -204,7 +244,7 @@ struct Board {
                 segment in
                 let p1 = Position(px, py, width: width, height: height, xWrapping: xWrapping)
                 let p2 = Position(px + targetDelta.0, py + targetDelta.1, width: width, height: height, xWrapping: xWrapping)
-                return (segment.from == p1 && segment.to == p2) || (segment.from == p2 && segment.to == p1)
+                return segment == Segment(p1, p2)
             }
         }
 

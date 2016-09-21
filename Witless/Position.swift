@@ -4,12 +4,65 @@ import Foundation
 
 typealias Region = Set<Position>
 
-struct Segment: Equatable {
-    let from, to: Position
+struct Segment {
+    let positions: Set<Position>
+
+    init(_ p1: Position, _ p2: Position) {
+        self.positions = [p1, p2]
+    }
+
+    func contains(x: Int, _ y: Int) -> Bool {
+        guard let position = positions.first?.makePosition(x, y) else {
+            return false
+        }
+        return positions.contains(position)
+    }
+
+    var minX: Int {
+        return positions.reduce(Int.max) {
+            running, position in
+            return min(running, position.x)
+        }
+    }
+
+    var column: Int? {
+        return positions.reduce(nil) {
+            running, position in
+            if running == nil {
+                return position.x
+            } else if position.x == running {
+                return running
+            } else {
+                return nil
+            }
+        }
+    }
+
+    var row: Int? {
+        return positions.reduce(nil) {
+            running, position in
+            if running == nil {
+                return position.y
+            } else if position.y == running {
+                return running
+            } else {
+                return nil
+            }
+        }
+    }
+}
+
+extension Segment: Hashable {
+    var hashValue: Int {
+        return positions.reduce(51) {
+            running, current in
+            running * 51 + current.hashValue
+        }
+    }
 }
 
 func ==(s1:Segment, s2:Segment) -> Bool {
-    return s1.from == s2.from && s1.to == s2.to
+    return s1.positions == s2.positions
 }
 
 enum Move: String {
@@ -49,6 +102,7 @@ struct Position {
     }
 
     func positionByMoving(move: Move) -> Position? {
+//        print("  \(self).positionByMoving(\(move)) = ", terminator: "")
         let position: Position?
         switch move {
             case .Down:
@@ -61,10 +115,11 @@ struct Position {
                 position = makePosition(x + 1, y)
         }
 
+//        print(position)
         return position
     }
 
-    private func makePosition(x: Int, _ y: Int) -> Position? {
+    func makePosition(x: Int, _ y: Int) -> Position? {
         let xRange = xWrapping ? (-1 ..< width) : 0 ..< width
         if xRange.contains(x) && (0 ..< height).contains(y) {
             let answer = Position((x + width) % width, y, width: width, height: height, xWrapping: xWrapping)
@@ -84,19 +139,46 @@ struct Position {
                 effectivePosition = self
         }
 
-        return Segment(from: effectivePosition, to: effectivePosition.positionByMoving(move)!)
+        return Segment(effectivePosition, effectivePosition.positionByMoving(move)!)
+    }
+
+    var borderingSegments: Set<Segment> {
+        // TODO cache this
+        let topSegment = Segment(makePosition(x, y)!, makePosition(x + 1, y)!)
+        let bottomSegment = Segment(makePosition(x, y + 1)!, makePosition(x + 1, y + 1)!)
+        let leftSegment = Segment(makePosition(x, y)!, makePosition(x, y + 1)!)
+        let effectiveRightX: Int
+        if x == width - 1 && xWrapping {
+            effectiveRightX = 0
+        } else {
+            effectiveRightX = x + 1
+        }
+        let rightSegment = Segment(makePosition(effectiveRightX, y)!,
+                                   makePosition(effectiveRightX, y + 1)!)
+
+        return [topSegment, bottomSegment, leftSegment, rightSegment]
     }
 }
 
 extension Position: Equatable {
 }
 
-extension Position: Hashable {
+extension RawPosition: Hashable, Equatable {
     var hashValue: Int {
-        return x.hashValue + y.hashValue
+        return (51 + x.hashValue) * 51 + y.hashValue
     }
 }
 
-func ==(lhs: Position, rhs: Position) -> Bool {
+extension Position: Hashable {
+    var hashValue: Int {
+        return rawPosition.hashValue
+    }
+}
+
+func ==(lhs: RawPosition, rhs: RawPosition) -> Bool {
     return lhs.x == rhs.x && lhs.y == rhs.y
+}
+
+func ==(lhs: Position, rhs: Position) -> Bool {
+    return lhs.rawPosition == rhs.rawPosition
 }

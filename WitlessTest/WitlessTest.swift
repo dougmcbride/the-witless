@@ -34,13 +34,15 @@ func beMoves(startPosition: RawPosition, moves: [String]) -> NonNilMatcherFunc<[
 class PositionSpec: QuickSpec {
     override func spec() {
         describe("A position at x=0") {
-            it("should have an effective segment from the right when moving left") {
-                let position1 = Position(0, 0, width: 2, height: 3, xWrapping: true)
-                let effectivePosition1 = Position(2, 0, width: 2, height: 3, xWrapping: true)
-                let position2 = Position(1, 0, width: 2, height: 3, xWrapping: true)
-                expect(position1.effectiveSegmentForMove(.Left)).to(equal(Segment(from: effectivePosition1,
-                                                                                  to: position2)))
+            describe("on a board with wrapping") {
+                it("should have an effective segment from the right when moving left") {
+                    let position1 = Position(0, 0, width: 2, height: 3, xWrapping: true)
+                    let effectivePosition1 = Position(2, 0, width: 2, height: 3, xWrapping: true)
+                    let position2 = Position(1, 0, width: 2, height: 3, xWrapping: true)
+                    expect(position1.effectiveSegmentForMove(.Left)).to(equal(Segment(effectivePosition1,
+                                                                                      position2)))
 
+                }
             }
         }
     }
@@ -54,8 +56,8 @@ class PathSpec: QuickSpec {
                 let position2 = Position(1, 0, width: 2, height: 2, xWrapping: false)
                 let position3 = Position(1, 1, width: 2, height: 2, xWrapping: false)
                 let path = Path(startPosition: position1, movesString: "RD")
-                expect(path.segments).to(equal([Segment(from: position1, to: position2),
-                                                Segment(from: position2, to: position3)]))
+                expect(path.segments).to(equal([Segment(position1, position2),
+                                                Segment(position2, position3)]))
             }
         }
 
@@ -65,8 +67,8 @@ class PathSpec: QuickSpec {
                 let position2 = Position(1, 0, width: 2, height: 2, xWrapping: true)
                 let position3 = Position(1, 1, width: 2, height: 2, xWrapping: true)
                 let path = Path(startPosition: position1, movesString: "LD")
-                expect(path.segments).to(equal([Segment(from: position1, to: position2),
-                                                Segment(from: position2, to: position3)]))
+                expect(path.segments).to(equal([Segment(position1, position2),
+                                                Segment(position2, position3)]))
             }
         }
     }
@@ -109,7 +111,6 @@ class SolutionSpec: QuickSpec {
             }
         }
 
-        /*
         describe("a 2x1 board with horizontal wrapping") {
             it("has four solutions") {
                 let startPosition = RawPosition(0, 1)
@@ -117,14 +118,34 @@ class SolutionSpec: QuickSpec {
                                   things: [[.Empty, .Empty]], wrapHorizontal: true)
                 let successfulBoards = board.successfulBoards()
                 expect(successfulBoards).to(beMoves(startPosition, moves: ["UR", "RU", "LU", "UL"]))
+            }
+        }
 
-                let renderer = ASCIIRenderer()
-                for solution in successfulBoards {
-                    renderer.drawBoard(solution)
-                    print(solution.path!.moves)
+        describe("a triangle puzzle") {
+            describe("without wrapping") {
+                it("has one solution") {
+                    let startPosition = RawPosition(0, 1)
+                    let board = Board(start: startPosition, end: RawPosition(2, 0), things: [[.Empty, .Triangle(1)]])
+                    expect(board.successfulBoards()).to(beMoves(startPosition, moves: ["URR"]))
+                }
+
+                it("has one solution") {
+                    let startPosition = RawPosition(0, 1)
+                    let board = Board(start: startPosition, end: RawPosition(2, 0), things: [[.Empty, .Triangle(2)]])
+                    expect(board.successfulBoards()).to(beMoves(startPosition, moves: ["RRU", "RUR"]))
+                }
+            }
+
+            describe("with wrapping") {
+                it("has three solutions") {
+                    let startPosition = RawPosition(0, 2)
+                    let board = Board(start: startPosition, end: RawPosition(0, 0), things: [[.Empty, .Empty],[.Triangle(2), .Empty]], wrapHorizontal: true)
+                    let successfulBoards = board.successfulBoards()
+                    successfulBoards.forEach{ASCIIRenderer().drawBoard($0)
+                    print($0.path!.movesString)}
+                    expect(successfulBoards).to(beMoves(startPosition, moves: ["URUL", "RUUL", "LULU"]))
                 }
             }
         }
-        */
     }
 }

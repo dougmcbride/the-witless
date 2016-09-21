@@ -23,7 +23,7 @@ struct ASCIIRenderer: Renderer {
                 let square: String
                 switch board.things[y][x] {
                     case .Empty:
-                        square = "..."
+                        square = "   "
                     case .Square(let color):
                         square = "[\(color.rawValue)]"
                     case .Star(let color):
@@ -43,15 +43,11 @@ struct ASCIIRenderer: Renderer {
     }
 
     private func printColumnSeparator(board: Board, row: Int, column: Int) {
-        if board.path!.segments.contains({ segment in
-            if !(segment.from.x == column + 1 && segment.to.x == column + 1) {
-                return false
-            }
-            return ((segment.from.y == row && segment.to.y == row + 1) || (segment.to.y == row && segment.from.y == row + 1))
-        }) {
-            print("#", terminator: "")
+        if board.path!.segments.contains(Segment(board.position(column + 1, row),
+                                                 board.position(column + 1, row + 1))) {
+            print("█", terminator: "")
         } else {
-            print(".", terminator: "")
+            print(" ", terminator: "")
         }
     }
 
@@ -60,12 +56,12 @@ struct ASCIIRenderer: Renderer {
     }
 
     private func printPathRow(row: Int, board: Board) {
-        var line = "|" + "." * (totalWidthOfBoard(board) - 2) + "|"
-        let vMarker = "#"
-        let hMarker = "#####"
+        var line = "|" + " " * (totalWidthOfBoard(board) - 2) + "|"
+        let vMarker = "█"
+        let hMarker = "█" * 5
 
-        for segment in board.path!.segments where segment.from.y == row && segment.to.y == row {
-            let startIndex = line.startIndex.advancedBy(1 + min(segment.to.x, segment.from.x) * 4)
+        for segment in board.path!.segments where segment.row == row {
+            let startIndex = line.startIndex.advancedBy(1 + segment.minX * 4)
             let endIndex = startIndex.advancedBy(hMarker.characters.count)
             line.replaceRange(startIndex ..< endIndex, with: hMarker)
         }

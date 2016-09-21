@@ -21,7 +21,7 @@ struct Path {
             return running + [nextPosition]
         }
         self.segments = zip(positions.dropLast(), moves).reduce([]) {
-            running, tuple in
+            (running, tuple) -> [Segment] in
             let (position, move) = tuple
             return running + [position.effectiveSegmentForMove(move)]
         }
@@ -52,7 +52,9 @@ struct Path {
             return true
         }
 
-        return !positions.contains(lastPosition.positionByMoving(move)!)
+        let allowed = !positions.contains(lastPosition.positionByMoving(move)!)
+        //print("path \(movesString), move \(move.rawValue) -> \(lastPosition.positionByMoving(move)!.rawPosition), \(allowed ? "ok" : "NOPE")")
+        return allowed
     }
 }
 
