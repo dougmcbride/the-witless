@@ -2,14 +2,14 @@
 
 import Foundation
 
-extension SequenceType where Generator.Element == Thing {
-    func countThing(t: Thing) -> Int {
+extension Sequence where Iterator.Element == Thing {
+    func countThing(_ t: Thing) -> Int {
         return filter({ $0 == t }).count
     }
 }
 
-enum ParsingError: ErrorType {
-    case UnknownSymbol
+enum ParsingError: Error {
+    case unknownSymbol
 }
 
 enum Color: String {
@@ -23,43 +23,43 @@ enum Color: String {
 }
 
 enum Thing: Equatable {
-    case Empty
-    case Star(Color)
-    case Square(Color)
-    case Triangle(Int)
+    case empty
+    case star(Color)
+    case square(Color)
+    case triangle(Int)
 
-    static func parse(string: String) throws -> [[Thing]] {
-        return try string.characters.split("/").map {
-            try $0.map {
-                let charString = String($0)
+    static func parse(_ string: String) throws -> [[Thing]] {
+        return try string.characters.split(separator: "/").map { (sequence: AnySequence<Character>) in
+            try sequence.map { (s: Character) -> Thing in
+                let charString = String(s)
                 switch charString {
-                    case "E":
-                        return .Empty
+                    case "E", "e", " ":
+                        return .empty
                     case "1", "2", "3":
-                        return .Triangle(Int(charString)!)
+                        return .triangle(Int(charString)!)
                     default:
-                        let uppercaseString = charString.uppercaseString
+                        let uppercaseString = charString.uppercased()
                         if uppercaseString == charString {
-                        return .Square(try colorForSymbol(charString))
+                            return .square(try colorForSymbol(charString))
                         } else {
-                        return .Star(try colorForSymbol(charString))
-                    }
+                            return .star(try colorForSymbol(charString))
                         }
                 }
             }
         }
+    }
 
-    static private func colorForSymbol(symbol: String) throws -> Color {
-        let uppercaseString = symbol.uppercaseString
+    static fileprivate func colorForSymbol(_ symbol: String) throws -> Color {
+        let uppercaseString = symbol.uppercased()
         guard let color = Color(rawValue: uppercaseString) else {
-            throw ParsingError.UnknownSymbol
+            throw ParsingError.unknownSymbol
         }
         return color
     }
 
     var caresAboutRegions: Bool {
         switch self {
-            case .Square, .Star:
+            case .square, .star:
                 return true
             default:
                 return false
@@ -69,11 +69,11 @@ enum Thing: Equatable {
 
 func ==(a: Thing, b: Thing) -> Bool {
     switch (a, b) {
-        case (.Empty, .Empty):
+        case (.empty, .empty):
             return true
-        case (.Star(let c1), .Star(let c2)):
+        case (.star(let c1), .star(let c2)):
             return c1 == c2
-        case (.Square(let c1), .Square(let c2)):
+        case (.square(let c1), .square(let c2)):
             return c1 == c2
         default:
             return false

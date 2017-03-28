@@ -3,15 +3,15 @@
 import Foundation
 
 protocol Renderer {
-    func drawBoard(board: Board)
+    func drawBoard(_ board: BoardState)
 }
 
 func *(string: String, times: Int) -> String {
-    return String(count: times, repeatedValue: Character(string))
+    return String(repeating: string, count: times)
 }
 
 struct ASCIIRenderer: Renderer {
-    func drawBoard(board: Board) {
+    func drawBoard(_ board: BoardState) {
         let width = totalWidthOfBoard(board)
         print("_" * width)
 
@@ -22,13 +22,13 @@ struct ASCIIRenderer: Renderer {
             for x in 0 ..< board.thingWidth {
                 let square: String
                 switch board.things[y][x] {
-                    case .Empty:
+                    case .empty:
                         square = "   "
-                    case .Square(let color):
+                    case .square(let color):
                         square = "[\(color.rawValue)]"
-                    case .Star(let color):
+                    case .star(let color):
                         square = "*\(color.rawValue)*"
-                    case .Triangle(let number):
+                    case .triangle(let number):
                         square = "^\(number)^"
                 }
 
@@ -42,34 +42,34 @@ struct ASCIIRenderer: Renderer {
         print("-" * width)
     }
 
-    private func printColumnSeparator(board: Board, row: Int, column: Int) {
-        if board.path!.segments.contains(Segment(board.position(column + 1, row),
-                                                 board.position(column + 1, row + 1))) {
+    private func printColumnSeparator(_ board: BoardState, row: Int, column: Int) {
+        if board.path!.segments.contains(Segment(board.positionAt(column + 1, row)!,
+                                                 board.positionAt(column + 1, row + 1)!)) {
             print("█", terminator: "")
         } else {
             print(" ", terminator: "")
         }
     }
 
-    private func totalWidthOfBoard(board: Board) -> Int {
+    private func totalWidthOfBoard(_ board: BoardState) -> Int {
         return board.thingWidth * 3 + 4 + board.thingWidth - 1
     }
 
-    private func printPathRow(row: Int, board: Board) {
+    private func printPathRow(_ row: Int, board: BoardState) {
         var line = "|" + " " * (totalWidthOfBoard(board) - 2) + "|"
         let vMarker = "█"
         let hMarker = "█" * 5
 
         for segment in board.path!.segments where segment.row == row {
-            let startIndex = line.startIndex.advancedBy(1 + segment.minX * 4)
-            let endIndex = startIndex.advancedBy(hMarker.characters.count)
-            line.replaceRange(startIndex ..< endIndex, with: hMarker)
+            let startIndex = line.characters.index(line.startIndex, offsetBy: 1 + segment.minX * 4)
+            let endIndex = line.characters.index(startIndex, offsetBy: hMarker.characters.count)
+            line.replaceSubrange(startIndex ..< endIndex, with: hMarker)
         }
 
         for position in board.path!.positions where position.y == row {
-            let startIndex = line.startIndex.advancedBy(1 + position.x * 4)
-            let endIndex = startIndex.advancedBy(vMarker.characters.count)
-            line.replaceRange(startIndex ..< endIndex, with: vMarker)
+            let startIndex = line.characters.index(line.startIndex, offsetBy: 1 + position.x * 4)
+            let endIndex = line.characters.index(startIndex, offsetBy: vMarker.characters.count)
+            line.replaceSubrange(startIndex ..< endIndex, with: vMarker)
         }
 
         print(line)
