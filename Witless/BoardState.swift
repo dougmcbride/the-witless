@@ -34,15 +34,15 @@ struct BoardState {
     }
 
     var succeeded: Bool {
-        guard let lastMove = path?.positions.last else {
+        guard let lastPosition = path?.positions.last else {
             return false
         }
 
-        if !board.endPositions.contains(where: { $0 == lastMove }) {
+        if !board.endPositions.contains(lastPosition) {
             return false
         }
 
-        if board.careAboutRegions {
+        if board.caresAboutRegions {
             for regionContents in regionThings() {
                 var checkedSquares = false
 
@@ -82,38 +82,35 @@ struct BoardState {
             }
         }
 
-        if trianglesAreUnhappy() {
+        if trianglesAreUnsatisfied() {
             return false
         }
 
         return true
     }
 
-    func trianglesAreUnhappy() -> Bool {
-        for y in 0 ..< board.thingHeight {
-            for x in 0 ..< board.thingWidth {
-                if case .triangle(let number) = board.things[y][x] {
-                    let borderingSegments = board.segmentsBordering(position: Position(x, y)).intersection(path!.segments).count
-                    if borderingSegments != number {
-                        return true
-                    }
-                }
+    func trianglesAreUnsatisfied() -> Bool {
+        // TODO functional
+        for triangle in board.triangles {
+            let borderingSegments = board.segmentsBordering(position: triangle.position).intersection(path!.segments)
+            if borderingSegments.count != triangle.number {
+                return true
             }
         }
+
         return false
     }
 
     func trianglesAreOverwhelmed() -> Bool {
-        for y in 0 ..< board.thingHeight {
-            for x in 0 ..< board.thingWidth {
-                if case .triangle(let number) = board.things[y][x] {
-                    let borderingSegments = board.segmentsBordering(position: Position(x, y)).intersection(path!.segments)
-                    if borderingSegments.count > number {
-                        return true
-                    }
-                }
+//        print("path.movesString = \(path?.movesString): ", terminator: "")
+        // TODO functional
+        for triangle in board.triangles {
+            let borderingSegments = board.segmentsBordering(position: triangle.position).intersection(path!.segments)
+            if borderingSegments.count > triangle.number {
+                return true
             }
         }
+
         return false
     }
 
@@ -193,6 +190,7 @@ struct BoardState {
             return []
         } else {
             return possibleBoards.filter {
+                !$0.trianglesAreOverwhelmed()}.filter {
                 $0.succeeded
             } + possibleBoards.flatMap {
                 $0.successfulBoardStates()
