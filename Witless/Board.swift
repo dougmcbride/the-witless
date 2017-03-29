@@ -39,9 +39,7 @@ struct Board {
         self.things = things
         self.xWrapping = wrapHorizontal
 
-        self.careAboutRegions =
-        things.reduce([], { (a: [Thing], b: [Thing]) -> [Thing] in a + b }) // TODO flatmap
-                .contains(where: { $0.caresAboutRegions })
+        self.careAboutRegions = things.flatMap{$0}.contains(where: { $0.caresAboutRegions })
     }
 
     var initialState: BoardState {
