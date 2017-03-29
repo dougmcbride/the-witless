@@ -76,7 +76,7 @@ struct Board {
 
         self.thingHeight = thingHeight
         self.thingWidth = thingWidth
-        self.caresAboutRegions = things.flatMap{$0}.contains(where: { $0.caresAboutRegions })
+        self.caresAboutRegions = FlattenCollection(things).contains { $0.caresAboutRegions }
         self.segments = segments
         self.triangles = triangles
     }
