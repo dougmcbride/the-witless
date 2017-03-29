@@ -1,4 +1,5 @@
-// Copyright (c) 2016 The Sneaky Frog. All rights reserved.
+// Copyright © 2017 The Sneaky Frog
+// See LICENSE.txt for licensing information
 
 struct Triangle {
     let number: Int

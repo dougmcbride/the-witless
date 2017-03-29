@@ -1,7 +1,5 @@
-//
-// Created by McBride, Doug on 3/28/17.
-// Copyright (c) 2017 The Sneaky Frog. All rights reserved.
-//
+// Copyright © 2017 The Sneaky Frog
+// See LICENSE.txt for licensing information
 
 import Foundation
 
