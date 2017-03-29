@@ -13,8 +13,8 @@ import Foundation
 // This is shorthand for the above
 //let things = try Thing.parse("EEEEE/WBEEE/BEWBB/EEEEE/WBEEE")
 //let things = try Thing.parse("EEEEEE/222222/EEEEEE/111111/EEEEEE/222222")
-//let things = try Thing.parse("PPWE/EEEE/EWWG/GEWW")
-let things = try Thing.parse(readLine(strippingNewline: true)!)
+let things = try Thing.parse("PPWE/EEEE/EWWG/GEWW")
+//let things = try Thing.parse(readLine(strippingNewline: true)!)
 
 //let startingBoard = Board(start: RawPosition(3, 6), end: RawPosition(3, 0), things: things, wrapHorizontal: true)
 //let startingBoard = Board(rawStartPositions: [RawPosition(0, 5)],
@@ -34,15 +34,15 @@ if let solution = solutionStates.first {
     print(solution.path!.movesString)
     let keystrokes = solution.path!.wasdMovesString + "W"
 
-    let task = Process()
-    task.launchPath = "/usr/bin/pbcopy"
+//    let task = Process()
+//    task.launchPath = "/usr/bin/pbcopy"
 
-    let pipe = Pipe()
-    task.standardInput = pipe
-    task.launch()
+//    let pipe = Pipe()
+//    task.standardInput = pipe
+//    task.launch()
 
-    let handle = pipe.fileHandleForWriting
-    handle.write(keystrokes.data(using: .utf8)!)
-    handle.closeFile()
+//    let handle = pipe.fileHandleForWriting
+//    handle.write(keystrokes.data(using: .utf8)!)
+//    handle.closeFile()
 }
 
