@@ -164,16 +164,16 @@ struct BoardState {
     }
 
     func successfulBoardStates(maximum: Int = Int.max) -> [BoardState] {
-        let possibleBoards = self.possibleBoardStates()
+        let possibleStates = self.possibleBoardStates()
 
-        if possibleBoards.isEmpty {
+        if possibleStates.isEmpty {
             return []
         } else {
-            return possibleBoards.filter {
-                        !$0.compareActualToRequiredAdjacentSegmentsForTriangles(>)
+            return possibleStates.filter {
+                        !$0.hitDeadEnd
                     }.filter {
                         $0.succeeded
-                    } + possibleBoards.flatMap {
+                    } + possibleStates.flatMap {
                 $0.successfulBoardStates()
             }
         }
