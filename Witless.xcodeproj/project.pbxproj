@@ -9,10 +9,12 @@
 /* Begin PBXBuildFile section */
 		5D9890F259ABB93D29BFD87B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989304ECE268C5069FC978 /* main.swift */; };
 		5D9891E5DF055E4371A57146 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9899E8026A157C99FB5E5D /* Path.swift */; };
+		5D989242857557E576D3AE8E /* BoardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989A57E632CFDB5676BD90 /* BoardState.swift */; };
 		5D989482E1E2C751746CF369 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D98946D778BFBA850F1CDCB /* Board.swift */; };
 		5D9894E40116DB5661636EA7 /* Rendering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9890AE6828B8CD4AFBB1DB /* Rendering.swift */; };
 		5D989700A781AAA79CD4A249 /* Thing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989D3399B518CDDF629CE6 /* Thing.swift */; };
 		5D98999725641A51EF7F1EB7 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989F5DE084748BF5ECB104 /* Position.swift */; };
+		5D989A1BD2CB53BACE6AEA11 /* BoardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D989A57E632CFDB5676BD90 /* BoardState.swift */; };
 		A2ED7D4C1D3BF4530050A2B3 /* WitlessTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2ED7D4B1D3BF4530050A2B3 /* WitlessTest.swift */; };
 		A2ED7D521D3BF5770050A2B3 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2ED7D511D3BF5770050A2B3 /* Quick.framework */; };
 		A2ED7D541D3BF5800050A2B3 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2ED7D531D3BF5800050A2B3 /* Nimble.framework */; };
@@ -64,6 +66,7 @@
 		5D98946D778BFBA850F1CDCB /* Board.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		5D98966288C71DEF1A4F32A9 /* Witless */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Witless; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D9899E8026A157C99FB5E5D /* Path.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
+		5D989A57E632CFDB5676BD90 /* BoardState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardState.swift; sourceTree = "<group>"; };
 		5D989D3399B518CDDF629CE6 /* Thing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thing.swift; sourceTree = "<group>"; };
 		5D989F5DE084748BF5ECB104 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		A2ED7D491D3BF4530050A2B3 /* WitlessTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WitlessTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,6 +125,7 @@
 				5D9899E8026A157C99FB5E5D /* Path.swift */,
 				5D989D3399B518CDDF629CE6 /* Thing.swift */,
 				5D989F5DE084748BF5ECB104 /* Position.swift */,
+				5D989A57E632CFDB5676BD90 /* BoardState.swift */,
 			);
 			path = Witless;
 			sourceTree = "<group>";
@@ -231,6 +235,7 @@
 				5D9891E5DF055E4371A57146 /* Path.swift in Sources */,
 				5D989700A781AAA79CD4A249 /* Thing.swift in Sources */,
 				5D98999725641A51EF7F1EB7 /* Position.swift in Sources */,
+				5D989242857557E576D3AE8E /* BoardState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,6 +249,7 @@
 				A2ED7D5C1D3BF7110050A2B3 /* Path.swift in Sources */,
 				A2ED7D5D1D3BF7110050A2B3 /* Thing.swift in Sources */,
 				A2ED7D5B1D3BF7110050A2B3 /* Board.swift in Sources */,
+				5D989A1BD2CB53BACE6AEA11 /* BoardState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
