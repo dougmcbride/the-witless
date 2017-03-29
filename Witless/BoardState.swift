@@ -198,3 +198,9 @@ struct BoardState {
         }
     }
 }
+
+extension BoardState: CustomDebugStringConvertible {
+    var debugDescription: String {
+        return "BoardState(path: \(path?.movesString)"
+    }
+}
