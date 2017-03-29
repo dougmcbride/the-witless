@@ -15,14 +15,14 @@ struct BoardState {
         }
 
         return board.moves(from: lastPosition)
-                .filter {
-                    return path!.doesNotIntersectItselfByAddingMove($0, toBoard: board)
+                .filter { move in
+                    path!.doesNotIntersectItselfByAddingMove(move, toBoard: board)
                 }
-                .map {
-                    makeState(adding: $0)
+                .map { move in
+                    makeState(adding: move)
                 }
-                .filter {
-                    !$0.compareActualToRequiredAdjacentSegmentsForTriangles(>)
+                .filter { state in
+                    !state.hitDeadEnd
                 }
     }
 
@@ -94,8 +94,8 @@ struct BoardState {
         }
     }
 
-    var failed: Bool {
-        return possibleBoardStates().isEmpty || compareActualToRequiredAdjacentSegmentsForTriangles(>)
+    var hitDeadEnd: Bool {
+        return compareActualToRequiredAdjacentSegmentsForTriangles(>)
     }
 
     func regionThings() -> [[Thing]] {
