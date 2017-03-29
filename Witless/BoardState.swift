@@ -14,19 +14,19 @@ struct BoardState {
             }
         }
 
-        return board.possibleMovesFrom(lastPosition)
+        return board.moves(from: lastPosition)
                 .filter {
                     return path!.doesNotIntersectItselfByAddingMove($0, toBoard: board)
                 }
                 .map {
-                    makeState(addingMove: $0)
+                    makeState(adding: $0)
                 }
                 .filter {
-                    !$0.trianglesAreOverwhelmed()
+                    !$0.compareActualToRequiredAdjacentSegmentsForTriangles(>)
                 }
     }
 
-    func makeState(addingMove move: Move) -> BoardState {
+    func makeState(adding move: Move) -> BoardState {
         let newPath = path!.path(addingMove: move, onBoard: board)
         return BoardState(board: board, path: newPath)
     }
@@ -80,40 +80,22 @@ struct BoardState {
             }
         }
 
-        if trianglesAreUnsatisfied() {
+        if compareActualToRequiredAdjacentSegmentsForTriangles(!=) {
             return false
         }
 
         return true
     }
 
-    func trianglesAreUnsatisfied() -> Bool {
-        // TODO functional
-        for triangle in board.triangles {
-            let borderingSegments = board.segmentsBordering(position: triangle.position).intersection(path!.segments)
-            if borderingSegments.count != triangle.number {
-                return true
-            }
+    func compareActualToRequiredAdjacentSegmentsForTriangles(_ compare: ((Int, Int) -> Bool)) -> Bool {
+        return board.triangles.contains { triangle in
+            let actualCount = board.allSegments(bordering: triangle.position).intersection(path!.segments).count
+            return compare(actualCount, triangle.requiredSegmentCount)
         }
-
-        return false
-    }
-
-    func trianglesAreOverwhelmed() -> Bool {
-//        print("path.movesString = \(path?.movesString): ", terminator: "")
-        // TODO functional
-        for triangle in board.triangles {
-            let borderingSegments = board.segmentsBordering(position: triangle.position).intersection(path!.segments)
-            if borderingSegments.count > triangle.number {
-                return true
-            }
-        }
-
-        return false
     }
 
     var failed: Bool {
-        return possibleBoardStates().isEmpty || trianglesAreOverwhelmed()
+        return possibleBoardStates().isEmpty || compareActualToRequiredAdjacentSegmentsForTriangles(>)
     }
 
     func regionThings() -> [[Thing]] {
@@ -188,9 +170,10 @@ struct BoardState {
             return []
         } else {
             return possibleBoards.filter {
-                !$0.trianglesAreOverwhelmed()}.filter {
-                $0.succeeded
-            } + possibleBoards.flatMap {
+                        !$0.compareActualToRequiredAdjacentSegmentsForTriangles(>)
+                    }.filter {
+                        $0.succeeded
+                    } + possibleBoards.flatMap {
                 $0.successfulBoardStates()
             }
         }

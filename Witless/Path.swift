@@ -23,7 +23,7 @@ struct Path {
 
         self.positions = moves.reduce([startPosition]) {
             running, move in
-            let nextPosition = board.pathPosition(fromPosition: running.last!, moving: move)!
+            let nextPosition = board.pathPosition(from: running.last!, moving: move)!
             return running + [nextPosition]
         }
 
@@ -56,7 +56,7 @@ struct Path {
             return true
         }
 
-        let allowed = !positions.contains(board.pathPosition(fromPosition: lastPosition, moving: move)!)
+        let allowed = !positions.contains(board.pathPosition(from: lastPosition, moving: move)!)
         //print("path \(movesString), move \(move.rawValue) -> \(lastPosition.positionByMoving(move)!.rawPosition), \(allowed ? "ok" : "NOPE")")
         return allowed
     }

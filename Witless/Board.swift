@@ -2,7 +2,7 @@
 // See LICENSE.txt for licensing information
 
 struct Triangle {
-    let number: Int
+    let requiredSegmentCount: Int
     let position: Position
 }
 
@@ -68,8 +68,8 @@ struct Board {
 
         for y in 0 ..< thingHeight {
             for x in 0 ..< thingWidth {
-                if case .triangle(let number) = things[y][x] {
-                    triangles.append(Triangle(number: number, position: Position(x, y)))
+                if case .triangle(let count) = things[y][x] {
+                    triangles.append(Triangle(requiredSegmentCount: count, position: Position(x, y)))
                 }
             }
         }
@@ -85,7 +85,7 @@ struct Board {
         return BoardState(board: self, path: nil)
     }
 
-    func pathPosition(fromPosition position: Position, moving move: Move) -> Position? {
+    func pathPosition(from position: Position, moving move: Move) -> Position? {
         return makePosition(fromPosition: position, move: move) { x, y in
             return positionAt(x, y)
         }
@@ -97,17 +97,15 @@ struct Board {
         }
     }
 
-    func possibleMovesFrom(_ p: Position) -> [Move] {
+    func moves(from p: Position) -> [Move] {
         return Move.allMoves.filter {
-            pathPosition(fromPosition: p, moving: $0) != nil
+            pathPosition(from: p, moving: $0) != nil
         }
     }
 
     func startingPaths() -> [Path] {
         return startPositions.flatMap { p -> [Path] in
-            possibleMovesFrom(p).map {
-                        Path(startPosition: p, moves: [$0], board: self)
-                    }
+            moves(from: p).map { Path(startPosition: p, moves: [$0], board: self) }
         }
     }
 
@@ -121,7 +119,7 @@ struct Board {
                 effectivePosition = position
         }
 
-        return Segment(effectivePosition, self.pathPosition(fromPosition: position, moving: move)!)
+        return Segment(effectivePosition, self.pathPosition(from: position, moving: move)!)
     }
 
     func positionAt(_ x: Int, _ y: Int, useThingPosition: Bool = false) -> Position? {
@@ -157,7 +155,7 @@ struct Board {
         }
     }
 
-    func segmentsBordering(position: Position) -> Set<Segment> {
+    func allSegments(bordering position: Position) -> Set<Segment> {
         return segments[position.y][position.x]
     }
 
