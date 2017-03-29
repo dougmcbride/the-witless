@@ -8,14 +8,14 @@ func containMoves(_ startPosition: Position, movesString: String) -> NonNilMatch
         (candidateBoards, failureMessage) -> Bool in
         failureMessage.postfixMessage = "contain path with moves <\(movesString)>"
 
-        guard let boards: [BoardState] = try! candidateBoards.evaluate(), !boards.isEmpty else {
+        guard let boardStates: [BoardState] = try! candidateBoards.evaluate(), !boardStates.isEmpty else {
             return false
         }
 
-        return boards.map {
+        return boardStates.map {
             $0.path!
         }.contains {
-            $0 == Path(startPosition: startPosition, movesString: movesString, board: boards.first!)
+            $0 == Path(startPosition: startPosition, movesString: movesString, board: boardStates.first!.board)
         }
     }
 }
@@ -45,7 +45,7 @@ class BoardSpec: QuickSpec {
             describe("on a board with wrapping") {
                 it("should have an effective segment from the right when moving left") {
                     let twoByThreeThings: [[Thing]] = [[.empty, .empty], [.empty, .empty], [.empty, .empty]]
-                    let board = BoardState(start: Position(0, 0), end: Position(1, 1), things: twoByThreeThings, wrapHorizontal: true)
+                    let board = Board(start: Position(0, 0), end: Position(1, 1), things: twoByThreeThings, wrapHorizontal: true)
                     let position1 = Position(0, 0)
                     let effectivePosition1 = Position(2, 0)
                     let position2 = Position(1, 0)
@@ -61,7 +61,7 @@ class PathSpec: QuickSpec {
         describe("A simple right-down path") {
             it("should have corresponding segments") {
                 let twoByTwoThings: [[Thing]] = [[.empty, .empty], [.empty, .empty]]
-                let board = BoardState(start: Position(0, 0), end: Position(1, 1), things: twoByTwoThings)
+                let board = Board(start: Position(0, 0), end: Position(1, 1), things: twoByTwoThings)
                 let position1 = Position(0, 0)
                 let position2 = Position(1, 0)
                 let position3 = Position(1, 1)
@@ -74,7 +74,7 @@ class PathSpec: QuickSpec {
         describe("A path wrapping left") {
             it("should show a segment from the right") {
                 let twoByTwoThings: [[Thing]] = [[.empty, .empty], [.empty, .empty]]
-                let board = BoardState(start: Position(0, 0), end: Position(1, 1), things: twoByTwoThings, wrapHorizontal: true)
+                let board = Board(start: Position(0, 0), end: Position(1, 1), things: twoByTwoThings, wrapHorizontal: true)
                 let position1 = Position(2, 0)
                 let position2 = Position(1, 0)
                 let position3 = Position(1, 1)
@@ -123,8 +123,8 @@ class SolutionSpec: QuickSpec {
         describe("A simple square board") {
             it("has two solutions") {
                 let startPosition = Position(0, 0)
-                let board = BoardState(start: startPosition, end: Position(1, 1), things: [[.empty]])
-                let solutions = board.successfulBoards()
+                let board = Board(start: startPosition, end: Position(1, 1), things: [[.empty]])
+                let solutions = board.successfulBoardStates()
                 expect(solutions).to(beMoves(startPosition, moves: ["RD", "DR"]))
             }
         }
@@ -132,15 +132,17 @@ class SolutionSpec: QuickSpec {
         describe("a simple black/white square board") {
             it("has two solutions") {
                 let startPosition = Position(0, 0)
-                let board = BoardState(start: startPosition, end: Position(2, 0), things: [[.square(.Black), .square(.White)]])
-                let solutions = board.successfulBoards()
+                let board = Board(start: startPosition, end: Position(2, 0), things: [[.square(.Black), .square(.White)]])
+                let solutions = board.successfulBoardStates()
                 expect(solutions).to(beMoves(startPosition, moves: ["RDRU", "DRUR"]))
             }
         }
 
         describe("an unknown symbol") {
             it("should cause a parsing exception") {
-                expect {try Thing.parse("J")}.to(throwError())
+                expect {
+                    try Thing.parse("J")
+                }.to(throwError())
             }
         }
 
@@ -148,9 +150,9 @@ class SolutionSpec: QuickSpec {
             let things = try! Thing.parse("BWB/BWB/BWB")
 
             context("without wrapping") {
-                let board = BoardState(start: Position(0, 3), end: Position(0, 0), things: things)
+                let board = Board(start: Position(0, 3), end: Position(0, 0), things: things)
                 it("can't be solved") {
-                    expect(board.successfulBoards()).to(beEmpty())
+                    expect(board.successfulBoardStates()).to(beEmpty())
                 }
             }
         }
@@ -158,9 +160,9 @@ class SolutionSpec: QuickSpec {
         describe("a 2x1 board with horizontal wrapping") {
             it("has four solutions") {
                 let startPosition = Position(0, 1)
-                let board = BoardState(start: startPosition, end: Position(1, 0),
-                                       things: [[.empty, .empty]], wrapHorizontal: true)
-                let successfulBoards = board.successfulBoards()
+                let board = Board(start: startPosition, end: Position(1, 0),
+                                  things: [[.empty, .empty]], wrapHorizontal: true)
+                let successfulBoards = board.successfulBoardStates()
                 expect(successfulBoards).to(beMoves(startPosition, moves: ["UR", "RU", "LU", "UL"]))
             }
         }
@@ -169,22 +171,22 @@ class SolutionSpec: QuickSpec {
             describe("without wrapping") {
                 it("has one solution") {
                     let startPosition = Position(0, 1)
-                    let board = BoardState(start: startPosition, end: Position(2, 0), things: [[.empty, .triangle(1)]])
-                    expect(board.successfulBoards()).to(beMoves(startPosition, moves: ["URR"]))
+                    let board = Board(start: startPosition, end: Position(2, 0), things: [[.empty, .triangle(1)]])
+                    expect(board.successfulBoardStates()).to(beMoves(startPosition, moves: ["URR"]))
                 }
 
                 it("has two solutions") {
                     let startPosition = Position(0, 1)
-                    let board = BoardState(start: startPosition, end: Position(2, 0), things: [[.empty, .triangle(2)]])
-                    expect(board.successfulBoards()).to(beMoves(startPosition, moves: ["RRU", "RUR"]))
+                    let board = Board(start: startPosition, end: Position(2, 0), things: [[.empty, .triangle(2)]])
+                    expect(board.successfulBoardStates()).to(beMoves(startPosition, moves: ["RRU", "RUR"]))
                 }
             }
 
             describe("with wrapping") {
                 it("has three solutions") {
                     let startPosition = Position(0, 2)
-                    let board = BoardState(start: startPosition, end: Position(0, 0), things: [[.empty, .empty], [.triangle(2), .empty]], wrapHorizontal: true)
-                    let successfulBoards = board.successfulBoards()
+                    let board = Board(start: startPosition, end: Position(0, 0), things: [[.empty, .empty], [.triangle(2), .empty]], wrapHorizontal: true)
+                    let successfulBoards = board.successfulBoardStates()
                     expect(successfulBoards).to(beMoves(startPosition, moves: ["URUL", "RUUL", "LULU"]))
                 }
             }

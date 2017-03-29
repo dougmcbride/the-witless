@@ -2,6 +2,7 @@
 //  Copyright (c) 2016 The Sneaky Frog. All rights reserved.
 
 import Foundation
+
 //let boardThings: [[Thing]] = [
 //        [.Star(.Black),   .Empty,          .Empty,          .Square(.Black)],
 //        [.Square(.White), .Square(.White), .Star(.Black),   .Empty],
@@ -23,16 +24,15 @@ let things = try Thing.parse(readLine(strippingNewline: true)!)
 
 //let things = try Thing.parse("bEEB/WWbE/BEWE/EBWb")
 
-let startingBoard = BoardState(start: Position(0, things.count), end: Position(things.count, 0),
-                               things: things)
+let board = Board(start: Position(0, things.count), end: Position(things.count, 0), things: things)
 
-let solutionBoards = startingBoard.successfulBoards()
-print("Found \(solutionBoards.count) possible solutions")
+let solutionStates = board.successfulBoardStates()
+print("Found \(solutionStates.count) possible solutions")
 
-if let solutionBoard = solutionBoards.first {
-    ASCIIRenderer().drawBoard(solutionBoard)
-    print(solutionBoard.path!.movesString)
-    let keystrokes = solutionBoard.path!.wasdMovesString + "W"
+if let solution = solutionStates.first {
+    ASCIIRenderer().draw(boardState: solution)
+    print(solution.path!.movesString)
+    let keystrokes = solution.path!.wasdMovesString + "W"
 
     let task = Process()
     task.launchPath = "/usr/bin/pbcopy"

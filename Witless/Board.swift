@@ -2,12 +2,11 @@
 
 var segmentCache = [Position: Set<Segment>]()
 
-struct BoardState {
+struct Board {
     let width: Int
     let height: Int
     let startPositions: [Position]
     let endPositions: [Position]
-    let path: Path?
     let things: [[Thing]]
     let xWrapping: Bool
     let careAboutRegions: Bool
@@ -15,7 +14,6 @@ struct BoardState {
     var thingWidth: Int {
         return width - (xWrapping ? 0 : 1)
     }
-
     var thingHeight: Int {
         return height - 1
     }
@@ -30,30 +28,50 @@ struct BoardState {
         let height = things.count + 1
 
         self.init(width: width, height: height,
-                  startPositions: startPositions, endPositions: endPositions, path: nil, things: things, wrapHorizontal: wrapHorizontal)
+                  startPositions: startPositions, endPositions: endPositions, things: things, wrapHorizontal: wrapHorizontal)
     }
 
-    init(width: Int, height: Int, startPositions: [Position], endPositions: [Position], path: Path?, things: [[Thing]], wrapHorizontal: Bool) {
-        let careAboutRegions =
-                things
-                .reduce([], { (a: [Thing], b: [Thing]) -> [Thing] in a + b })
-                .contains(where: { (a: Thing) -> Bool in a.caresAboutRegions })
-
-        self.init(width: width, height: height,
-                  startPositions: startPositions,
-                  endPositions: endPositions,
-                  path: path, things: things, wrapHorizontal: wrapHorizontal, careAboutRegions: careAboutRegions)
-    }
-
-    init(width: Int, height: Int, startPositions: [Position], endPositions: [Position], path: Path?, things: [[Thing]], wrapHorizontal: Bool, careAboutRegions: Bool) {
+    init(width: Int, height: Int, startPositions: [Position], endPositions: [Position], things: [[Thing]], wrapHorizontal: Bool) {
         self.width = width
         self.height = height
-        self.path = path
         self.startPositions = startPositions
         self.endPositions = endPositions
         self.things = things
         self.xWrapping = wrapHorizontal
-        self.careAboutRegions = careAboutRegions
+
+        self.careAboutRegions =
+        things.reduce([], { (a: [Thing], b: [Thing]) -> [Thing] in a + b }) // TODO flatmap
+                .contains(where: { $0.caresAboutRegions })
+    }
+
+    var initialState: BoardState {
+        return BoardState(board: self, path: nil)
+    }
+
+    func pathPosition(fromPosition position: Position, moving move: Move) -> Position? {
+        return makePosition(fromPosition: position, move: move) { x, y in
+            return positionAt(x, y)
+        }
+    }
+
+    func thingPosition(fromPosition position: Position, moving move: Move) -> Position? {
+        return makePosition(fromPosition: position, move: move) { x, y in
+            return positionAt(x, y, useThingPosition: true)
+        }
+    }
+
+    func possibleMovesFrom(_ p: Position) -> [Move] {
+        return Move.allMoves.filter {
+            pathPosition(fromPosition: p, moving: $0) != nil
+        }
+    }
+
+    func startingPaths() -> [Path] {
+        return startPositions.flatMap { p -> [Path] in
+            possibleMovesFrom(p).map {
+                        Path(startPosition: p, moves: [$0], board: self)
+                    }
+        }
     }
 
     func segmentsBordering(position pos: Position) -> Set<Segment> {
@@ -80,20 +98,6 @@ struct BoardState {
         return segments
     }
 
-    func positionAt(_ x: Int, _ y: Int, useThingPosition: Bool = false) -> Position? {
-        let effectiveWidth = useThingPosition ? thingWidth : width
-        let effectiveHeight = useThingPosition ? thingHeight : height
-
-        let xRange = xWrapping && !useThingPosition ? (-1 ..< effectiveWidth) : 0 ..< effectiveWidth
-        let yRange = 0 ..< effectiveHeight
-
-        if xRange.contains(x) && yRange.contains(y) {
-            return Position((x + effectiveWidth) % effectiveWidth, y)
-        }
-
-        return nil
-    }
-
     func segment(fromPosition position: Position, withMove move: Move) -> Segment {
         let effectivePosition: Position
 
@@ -107,19 +111,18 @@ struct BoardState {
         return Segment(effectivePosition, self.pathPosition(fromPosition: position, moving: move)!)
     }
 
-    func possibleBoardStates() -> [BoardState] {
-        guard let lastPosition = path?.positions.last else {
-            return startingPaths().map {
-                BoardState(width: width, height: height,
-                           startPositions: startPositions, endPositions: endPositions,
-                           path: $0, things: things, wrapHorizontal: xWrapping)
-            }
+    func positionAt(_ x: Int, _ y: Int, useThingPosition: Bool = false) -> Position? {
+        let effectiveWidth = useThingPosition ? thingWidth : width
+        let effectiveHeight = useThingPosition ? thingHeight : height
+
+        let xRange = xWrapping && !useThingPosition ? (-1 ..< effectiveWidth) : 0 ..< effectiveWidth
+        let yRange = 0 ..< effectiveHeight
+
+        if xRange.contains(x) && yRange.contains(y) {
+            return Position((x + effectiveWidth) % effectiveWidth, y)
         }
 
-        return possibleMovesFrom(lastPosition)
-            .filter { return path!.doesNotIntersectItselfByAddingMove($0, toBoard: self) }
-            .map { boardByAddingMove($0) }
-            .filter { !$0.trianglesAreOverwhelmed() }
+        return nil
     }
 
     func makePosition(fromPosition position: Position, move: Move, block: ((Int, Int) -> Position?)) -> Position? {
@@ -135,39 +138,56 @@ struct BoardState {
         }
     }
 
-    func pathPosition(fromPosition position: Position, moving move: Move) -> Position? {
-        return makePosition(fromPosition: position, move: move) { x, y in
-            return positionAt(x, y)
-        }
-    }
-
-    func thingPosition(fromPosition position: Position, moving move: Move) -> Position? {
-        return makePosition(fromPosition: position, move: move) { x, y in
-            return positionAt(x, y, useThingPosition: true)
-        }
-    }
-
-    fileprivate func possibleAdjacentThingPositions(fromThingPosition p: Position) -> [Position] {
+    func possibleAdjacentThingPositions(fromThingPosition p: Position) -> [Position] {
         return Move.allMoves.flatMap {
             thingPosition(fromPosition: p, moving: $0)
         }
     }
 
-    fileprivate func possibleMovesFrom(_ p: Position) -> [Move] {
-        return Move.allMoves.filter {
-            pathPosition(fromPosition: p, moving: $0) != nil
-        }
+    func successfulBoardStates() -> [BoardState] {
+        return initialState.successfulBoardStates()
+    }
+}
+
+struct BoardState {
+    let board: Board
+    let path: Path?
+
+    var width: Int {
+        return board.width
+    }
+    var height: Int {
+        return board.height
+    }
+    var thingWidth: Int {
+        return board.thingWidth
+    }
+    var thingHeight: Int {
+        return board.thingHeight
     }
 
-    fileprivate func startingPaths() -> [Path] {
-        return startPositions.flatMap { p -> [Path] in
-            self.possibleMovesFrom(p).map {Path(startPosition: p, moves: [$0], board: self)}
+    func possibleBoardStates() -> [BoardState] {
+        guard let lastPosition = path?.positions.last else {
+            return board.startingPaths().map {
+                BoardState(board: board, path: $0)
+            }
         }
+
+        return board.possibleMovesFrom(lastPosition)
+                .filter {
+                    return path!.doesNotIntersectItselfByAddingMove($0, toBoard: board)
+                }
+                .map {
+                    makeState(addingMove: $0)
+                }
+                .filter {
+                    !$0.trianglesAreOverwhelmed()
+                }
     }
 
-    fileprivate func boardByAddingMove(_ move: Move) -> BoardState {
-        let newPath = path!.path(addingMove: move, onBoard: self)
-        return BoardState(width: width, height: height, startPositions: startPositions, endPositions: endPositions, path: newPath, things: things, wrapHorizontal: xWrapping)
+    func makeState(addingMove move: Move) -> BoardState {
+        let newPath = path!.path(addingMove: move, onBoard: board)
+        return BoardState(board: board, path: newPath)
     }
 
     var succeeded: Bool {
@@ -175,11 +195,11 @@ struct BoardState {
             return false
         }
 
-        if !endPositions.contains(where: { $0 == lastMove }) {
+        if !board.endPositions.contains(where: { $0 == lastMove }) {
             return false
         }
 
-        if careAboutRegions {
+        if board.careAboutRegions {
             for regionContents in regionThings() {
                 var checkedSquares = false
 
@@ -226,11 +246,11 @@ struct BoardState {
         return true
     }
 
-    fileprivate func trianglesAreUnhappy() -> Bool {
+    func trianglesAreUnhappy() -> Bool {
         for y in 0 ..< thingHeight {
             for x in 0 ..< thingWidth {
-                if case .triangle(let number) = things[y][x] {
-                    let borderingSegments = segmentsBordering(position: Position(x, y)).intersection(path!.segments).count
+                if case .triangle(let number) = board.things[y][x] {
+                    let borderingSegments = board.segmentsBordering(position: Position(x, y)).intersection(path!.segments).count
                     if borderingSegments != number {
                         return true
                     }
@@ -240,17 +260,12 @@ struct BoardState {
         return false
     }
 
-    fileprivate func trianglesAreOverwhelmed() -> Bool {
+    func trianglesAreOverwhelmed() -> Bool {
         for y in 0 ..< thingHeight {
             for x in 0 ..< thingWidth {
-                if case .triangle(let number) = things[y][x] {
-//                    let foo = {$0.positions.map{"(\($0.x),\($0.y))"}}
-                    let borderingSegments = segmentsBordering(position: Position(x, y)).intersection(path!.segments)
-//                    print("position(x,y).borderingSegments = \(position(x, y).borderingSegments.map({$0.positions.map{"(\($0.x),\($0.y))"}}))")
-//                    print("path!.segments = \(path!.segments.map({$0.positions.map{"(\($0.x),\($0.y))"}}))")
-//                    print("borderingSegments = \(borderingSegments.map({$0.positions.map{"(\($0.x),\($0.y))"}}))")
+                if case .triangle(let number) = board.things[y][x] {
+                    let borderingSegments = board.segmentsBordering(position: Position(x, y)).intersection(path!.segments)
                     if borderingSegments.count > number {
-                        //print("killing path \(path!.movesString)")
                         return true
                     }
                 }
@@ -258,7 +273,6 @@ struct BoardState {
         }
         return false
     }
-
 
     var failed: Bool {
         return possibleBoardStates().isEmpty || trianglesAreOverwhelmed()
@@ -268,12 +282,12 @@ struct BoardState {
         return regions().values.map {
             (region) in
             return region.map {
-                return things[$0.y][$0.x]
+                return board.things[$0.y][$0.x]
             }
         }
     }
 
-    func regions() -> [Position:Region] {
+    func regions() -> [Position: Region] {
         var regionMap = [Position: Region]()
 
         for x in 0 ..< thingWidth {
@@ -293,8 +307,8 @@ struct BoardState {
         return regionMap
     }
 
-    fileprivate func reachableThingPositions(fromThingPosition position: Position, done: Set<Position> = []) -> Set<Position> {
-        let moves = possibleAdjacentThingPositions(fromThingPosition: position).filter {
+    func reachableThingPositions(fromThingPosition position: Position, done: Set<Position> = []) -> Set<Position> {
+        let moves = board.possibleAdjacentThingPositions(fromThingPosition: position).filter {
             !done.contains($0)
         }.filter {
             to in
@@ -329,15 +343,17 @@ struct BoardState {
         }
     }
 
-    func successfulBoards(maximum: Int = Int.max) -> [BoardState] {
-        //print("board \(path?.movesString)")
+    func successfulBoardStates(maximum: Int = Int.max) -> [BoardState] {
         let possibleBoards = self.possibleBoardStates()
 
         if possibleBoards.isEmpty {
             return []
         } else {
-            return possibleBoards.filter { $0.succeeded } +
-                possibleBoards.flatMap { $0.successfulBoards() }
+            return possibleBoards.filter {
+                $0.succeeded
+            } + possibleBoards.flatMap {
+                $0.successfulBoardStates()
+            }
         }
     }
 }
