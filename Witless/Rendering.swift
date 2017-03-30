@@ -14,16 +14,19 @@ func *(string: String, times: Int) -> String {
 struct ASCIIRenderer: Renderer {
     func draw(boardState: BoardState) {
         let board = boardState.board
+        let horizontalEdgeString = board.xWrapping ? " " : "|"
+        let effectiveWidth = board.xWrapping ? board.thingWidth - 1 : board.thingWidth
 
         let width = totalWidth(of: board)
         print("_" * width)
 
         for y in 0 ..< board.thingHeight {
             printPathRow(rowIndex: y, boardState: boardState)
-            print("|", terminator: "")
+            print(horizontalEdgeString, terminator: "")
             printColumnSeparator(boardState, row: y, column: -1)
-            for x in 0 ..< board.thingWidth {
+            for x in 0 ..< effectiveWidth {
                 let square: String
+
                 switch board.things[y][x] {
                     case .empty:
                         square = "   "
@@ -38,7 +41,7 @@ struct ASCIIRenderer: Renderer {
                 print(square, terminator: "")
                 printColumnSeparator(boardState, row: y, column: x)
             }
-            print("|")
+            print(horizontalEdgeString)
         }
 
         printPathRow(rowIndex: board.thingHeight, boardState: boardState)
@@ -59,7 +62,8 @@ struct ASCIIRenderer: Renderer {
     }
 
     private func printPathRow(rowIndex row: Int, boardState: BoardState) {
-        var line = "|" + " " * (totalWidth(of: boardState.board) - 2) + "|"
+        let horizontalEdgeString = boardState.board.xWrapping ? " " : "|"
+        var line = horizontalEdgeString + " " * (totalWidth(of: boardState.board) - 2) + horizontalEdgeString
         let vMarker = "█"
         let hMarker = "█" * 5
 
