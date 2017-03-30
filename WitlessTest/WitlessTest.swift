@@ -124,7 +124,7 @@ class CellSpec: QuickSpec {
         describe("an unknown symbol") {
             it("should cause a parsing exception") {
                 expect {
-                    try Cell.parse("J")
+                    try Cell.parse("$")
                 }.to(throwError())
             }
         }
@@ -146,22 +146,22 @@ class SolutionSpec: QuickSpec {
 
         describe("a simple black/white square board") {
             it("has two solutions") {
-                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .upperRight, cells: [[.square(.black), .square(.white)]]),
+                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .upperRight, cells: [[.square("B"), .square("W")]]),
                                     are: ["RDRU", "DRUR"])
             }
         }
 
         describe("a three-star board") {
             it("can't be solved") {
-                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .upperRight, cells: [[.star(.black), .star(.black), .star(.black)]]),
+                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .upperRight, cells: [[.star("b"), .star("b"), .star("b")]]),
                                     are: [])
             }
         }
 
         describe("a 2x2 star board") {
             it("has four solutions") {
-                self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, cells: [[.star(.purple), .star(.purple)],
-                                                                                                        [.star(.purple), .star(.purple)]]),
+                self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, cells: [[.star("p"), .star("p")],
+                                                                                                        [.star("p"), .star("p")]]),
                                     are: ["UURDDRUU", "URRU", "RUUR", "RRULLURR"])
             }
         }

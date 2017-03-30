@@ -31,9 +31,9 @@ struct ASCIIRenderer: Renderer {
                     case .empty:
                         square = "   "
                     case .square(let color):
-                        square = "[\(color.rawValue)]"
+                        square = "[\(color)]"
                     case .star(let color):
-                        square = "*\(color.rawValue)*"
+                        square = "*\(color)*"
                     case .triangle(let number):
                         square = "^\(number)^"
                 }

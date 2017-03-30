@@ -10,20 +10,20 @@ extension Sequence where Iterator.Element == Cell {
 }
 
 enum ParsingError: Error {
-    case unknownSymbol
+    case unknownCharacter(Character)
+
+    var localizedDescription: String {
+        switch self {
+            case .unknownCharacter(let c):
+                return "Invalid character '\(c)'"
+        }
+    }
 }
 
-enum Color: String {
-    case white = "W"
-    case black = "K"
-    case green = "G"
-    case red = "R"
-    case blue = "B"
-    case yellow = "Y"
-    case purple = "P"
-}
 
 enum Cell: Equatable {
+    typealias Color = Character
+
     case empty
     case star(Color)
     case square(Color)
@@ -32,31 +32,22 @@ enum Cell: Equatable {
     /// Parse a /-delimited String into rows of cells
     static func parse(_ string: String) throws -> [[Cell]] {
         return try string.characters.split(separator: "/").map { (sequence: AnySequence<Character>) in
-            try sequence.map { (s: Character) -> Cell in
-                let charString = String(s)
+            try sequence.map { (character: Character) -> Cell in
+                let charString = String(character)
                 switch charString {
                     case "E", "e", " ":
                         return .empty
                     case "1", "2", "3":
                         return .triangle(Int(charString)!)
+                    case "A"..."Z":
+                        return .square(character)
+                    case "a"..."z":
+                        return .star(character)
                     default:
-                        let uppercaseString = charString.uppercased()
-                        if uppercaseString == charString {
-                            return .square(try colorForSymbol(charString))
-                        } else {
-                            return .star(try colorForSymbol(charString))
-                        }
+                        throw ParsingError.unknownCharacter(character)
                 }
             }
         }
-    }
-
-    static fileprivate func colorForSymbol(_ symbol: String) throws -> Color {
-        let uppercaseString = symbol.uppercased()
-        guard let color = Color(rawValue: uppercaseString) else {
-            throw ParsingError.unknownSymbol
-        }
-        return color
     }
 
     var caresAboutRegions: Bool {
