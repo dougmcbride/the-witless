@@ -3,7 +3,7 @@
 
 import Foundation
 
-//let boardThings: [[Thing]] = [
+//let boardCells: [[Cell]] = [
 //        [.Star(.Black),   .Empty,          .Empty,          .Square(.Black)],
 //        [.Square(.White), .Square(.White), .Star(.Black),   .Empty],
 //        [.Square(.Black), .Empty,          .Square(.White), .Empty],
@@ -11,18 +11,18 @@ import Foundation
 // ]
 
 // This is shorthand for the above
-//let things = try Thing.parse("EEEEE/WBEEE/BEWBB/EEEEE/WBEEE")
-//let things = try Thing.parse("PPWE/EEEE/GWWG/GEWW")
-//let things = try Thing.parse("EEEE/EEEE/EEEE")
-//let things = try Thing.parse(readLine(strippingNewline: true)!)
-//let things = try Thing.parse("pp/pp")
-//let things = try Thing.parse("bEEB/WWbE/BEWE/EBWb")
+//let cells = try Cell.parse("EEEEE/WBEEE/BEWBB/EEEEE/WBEEE")
+//let cells = try Cell.parse("PPWE/EEEE/GWWG/GEWW")
+//let cells = try Cell.parse("EEEE/EEEE/EEEE")
+//let cells = try Cell.parse(readLine(strippingNewline: true)!)
+//let cells = try Cell.parse("pp/pp")
+//let cells = try Cell.parse("bEEB/WWbE/BEWE/EBWb")
 
-//var board = Board(startCorner: .lowerLeft, endCorner: .upperRight, things: things)
+//var board = Board(startCorner: .lowerLeft, endCorner: .upperRight, cells: cells)
 
 // The tough cylinder puzzle in the Secret Caverns
-let things = try Thing.parse("EEEEEE/222222/EEEEEE/111111/EEEEEE/222222")
-var board = Board(start: Position(3, 6), end: Position(3, 0), things: things, wrapHorizontal: true)
+let cells = try Cell.parse("EEEEEE/222222/EEEEEE/111111/EEEEEE/222222")
+var board = Board(start: Position(3, 6), end: Position(3, 0), cells: cells, wrapHorizontal: true)
 
 let processInfo = ProcessInfo.processInfo
 board.solutionStrategy = .first

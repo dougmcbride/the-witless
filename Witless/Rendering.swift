@@ -15,19 +15,19 @@ struct ASCIIRenderer: Renderer {
     func draw(boardState: BoardState) {
         let board = boardState.board
         let horizontalEdgeString = board.xWrapping ? " " : "|"
-        let effectiveWidth = board.xWrapping ? board.thingWidth - 1 : board.thingWidth
+        let effectiveWidth = board.xWrapping ? board.cellWidth - 1 : board.cellWidth
 
         let width = totalWidth(of: board)
         print("_" * width)
 
-        for y in 0 ..< board.thingHeight {
+        for y in 0 ..< board.cellHeight {
             printPathRow(rowIndex: y, boardState: boardState)
             print(horizontalEdgeString, terminator: "")
             printColumnSeparator(boardState, row: y, column: -1)
             for x in 0 ..< effectiveWidth {
                 let square: String
 
-                switch board.things[y][x] {
+                switch board.cells[y][x] {
                     case .empty:
                         square = "   "
                     case .square(let color):
@@ -44,7 +44,7 @@ struct ASCIIRenderer: Renderer {
             print(horizontalEdgeString)
         }
 
-        printPathRow(rowIndex: board.thingHeight, boardState: boardState)
+        printPathRow(rowIndex: board.cellHeight, boardState: boardState)
         print("-" * width)
     }
 
@@ -58,7 +58,7 @@ struct ASCIIRenderer: Renderer {
     }
 
     private func totalWidth(of board: Board) -> Int {
-        return board.thingWidth * 3 + 4 + board.thingWidth - 1
+        return board.cellWidth * 3 + 4 + board.cellWidth - 1
     }
 
     private func printPathRow(rowIndex row: Int, boardState: BoardState) {

@@ -3,8 +3,8 @@
 
 import Foundation
 
-extension Sequence where Iterator.Element == Thing {
-    func countThing(_ t: Thing) -> Int {
+extension Sequence where Iterator.Element == Cell {
+    func countCell(_ t: Cell) -> Int {
         return filter({ $0 == t }).count
     }
 }
@@ -23,15 +23,15 @@ enum Color: String {
     case purple = "P"
 }
 
-enum Thing: Equatable {
+enum Cell: Equatable {
     case empty
     case star(Color)
     case square(Color)
     case triangle(Int)
 
-    static func parse(_ string: String) throws -> [[Thing]] {
+    static func parse(_ string: String) throws -> [[Cell]] {
         return try string.characters.split(separator: "/").map { (sequence: AnySequence<Character>) in
-            try sequence.map { (s: Character) -> Thing in
+            try sequence.map { (s: Character) -> Cell in
                 let charString = String(s)
                 switch charString {
                     case "E", "e", " ":
@@ -68,7 +68,7 @@ enum Thing: Equatable {
     }
 }
 
-func ==(a: Thing, b: Thing) -> Bool {
+func ==(a: Cell, b: Cell) -> Bool {
     switch (a, b) {
         case (.empty, .empty):
             return true

@@ -44,8 +44,8 @@ class BoardSpec: QuickSpec {
         describe("A position at x=0") {
             describe("on a board with wrapping") {
                 it("should have an effective segment from the right when moving left") {
-                    let twoByThreeThings: [[Thing]] = [[.empty, .empty], [.empty, .empty], [.empty, .empty]]
-                    let board = Board(start: Position(0, 0), end: Position(1, 1), things: twoByThreeThings, wrapHorizontal: true)
+                    let twoByThreeCells: [[Cell]] = [[.empty, .empty], [.empty, .empty], [.empty, .empty]]
+                    let board = Board(start: Position(0, 0), end: Position(1, 1), cells: twoByThreeCells, wrapHorizontal: true)
                     let position1 = Position(0, 0)
                     let effectivePosition1 = Position(2, 0)
                     let position2 = Position(1, 0)
@@ -60,8 +60,8 @@ class PathSpec: QuickSpec {
     override func spec() {
         describe("A simple right-down path") {
             it("should have corresponding segments") {
-                let twoByTwoThings: [[Thing]] = [[.empty, .empty], [.empty, .empty]]
-                let board = Board(start: Position(0, 0), end: Position(1, 1), things: twoByTwoThings)
+                let twoByTwoCells: [[Cell]] = [[.empty, .empty], [.empty, .empty]]
+                let board = Board(start: Position(0, 0), end: Position(1, 1), cells: twoByTwoCells)
                 let position1 = Position(0, 0)
                 let position2 = Position(1, 0)
                 let position3 = Position(1, 1)
@@ -73,8 +73,8 @@ class PathSpec: QuickSpec {
 
         describe("A path wrapping left") {
             it("should show a segment from the right") {
-                let twoByTwoThings: [[Thing]] = [[.empty, .empty], [.empty, .empty]]
-                let board = Board(start: Position(0, 0), end: Position(1, 1), things: twoByTwoThings, wrapHorizontal: true)
+                let twoByTwoCells: [[Cell]] = [[.empty, .empty], [.empty, .empty]]
+                let board = Board(start: Position(0, 0), end: Position(1, 1), cells: twoByTwoCells, wrapHorizontal: true)
                 let position1 = Position(2, 0)
                 let position2 = Position(1, 0)
                 let position3 = Position(1, 1)
@@ -118,13 +118,13 @@ class SegmentSpec: QuickSpec {
     }
 }
 
-class ThingSpec: QuickSpec {
+class CellSpec: QuickSpec {
     override func spec() {
         super.spec()
         describe("an unknown symbol") {
             it("should cause a parsing exception") {
                 expect {
-                    try Thing.parse("J")
+                    try Cell.parse("J")
                 }.to(throwError())
             }
         }
@@ -139,29 +139,29 @@ class SolutionSpec: QuickSpec {
     override func spec() {
         describe("A 1x1 square board") {
             it("has two solutions") {
-                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .lowerRight, things: [[.empty]]),
+                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .lowerRight, cells: [[.empty]]),
                                     are: ["RD", "DR"])
             }
         }
 
         describe("a simple black/white square board") {
             it("has two solutions") {
-                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .upperRight, things: [[.square(.black), .square(.white)]]),
+                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .upperRight, cells: [[.square(.black), .square(.white)]]),
                                     are: ["RDRU", "DRUR"])
             }
         }
 
         describe("a three-star board") {
             it("can't be solved") {
-                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .upperRight, things: [[.star(.black), .star(.black), .star(.black)]]),
+                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .upperRight, cells: [[.star(.black), .star(.black), .star(.black)]]),
                                     are: [])
             }
         }
 
         describe("a 2x2 star board") {
             it("has four solutions") {
-                self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, things: [[.star(.purple), .star(.purple)],
-                                                                                                         [.star(.purple), .star(.purple)]]),
+                self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, cells: [[.star(.purple), .star(.purple)],
+                                                                                                        [.star(.purple), .star(.purple)]]),
                                     are: ["UURDDRUU", "URRU", "RUUR", "RRULLURR"])
             }
         }
@@ -169,14 +169,14 @@ class SolutionSpec: QuickSpec {
         describe("a BWB/BWB/BWB board without wrapping") {
             it("can't be solved") {
 
-                self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperLeft, things: try! Thing.parse("BWB/BWB/BWB")),
+                self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperLeft, cells: try! Cell.parse("BWB/BWB/BWB")),
                                     are: [])
             }
         }
 
         describe("a 2x1 board with horizontal wrapping") {
             it("has four solutions") {
-                self.checkSolutions(for: Board(start: Position(0, 1), end: Position(1, 0), things: [[.empty, .empty]], wrapHorizontal: true),
+                self.checkSolutions(for: Board(start: Position(0, 1), end: Position(1, 0), cells: [[.empty, .empty]], wrapHorizontal: true),
                                     are: ["UR", "RU", "LU", "UL"])
             }
         }
@@ -184,19 +184,19 @@ class SolutionSpec: QuickSpec {
         describe("a triangle puzzle") {
             describe("without wrapping") {
                 it("has one solution") {
-                    self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, things: [[.empty, .triangle(1)]]),
+                    self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, cells: [[.empty, .triangle(1)]]),
                                         are: ["URR"])
                 }
 
                 it("has two solutions") {
-                    self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, things: [[.empty, .triangle(2)]]),
+                    self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, cells: [[.empty, .triangle(2)]]),
                                         are: ["RRU", "RUR"])
                 }
             }
 
             describe("with wrapping") {
                 it("has three solutions") {
-                    self.checkSolutions(for: Board(start: Position(0, 2), end: .zero, things: [[.empty, .empty], [.triangle(2), .empty]], wrapHorizontal: true),
+                    self.checkSolutions(for: Board(start: Position(0, 2), end: .zero, cells: [[.empty, .empty], [.triangle(2), .empty]], wrapHorizontal: true),
                                         are: ["URUL", "RUUL", "LULU"])
                 }
             }

@@ -39,11 +39,11 @@ struct BoardState {
         }
 
         if board.caresAboutRegions {
-            for regionContents in regionThings() {
+            for regionContents in regionCells() {
                 var checkedSquares = false
 
-                for thing in regionContents {
-                    switch thing {
+                for cell in regionContents {
+                    switch cell {
                         case .square(let color):
                             if checkedSquares {
                                 break
@@ -59,7 +59,7 @@ struct BoardState {
                                 return false
                             }
                         case .star(let color):
-                            switch (regionContents.countThing(.star(color)), regionContents.countThing(.square(color))) {
+                            switch (regionContents.countCell(.star(color)), regionContents.countCell(.square(color))) {
                                 case (0, _):
                                     break
                                 case (1, 1):
@@ -100,11 +100,11 @@ struct BoardState {
         return actualToRequiredAdjacentSegmentsForTriangles(is: >)
     }
 
-    func regionThings() -> [[Thing]] {
+    func regionCells() -> [[Cell]] {
         return regions().values.map {
             (region) in
             return region.map {
-                return board.things[$0.y][$0.x]
+                return board.cells[$0.y][$0.x]
             }
         }
     }
@@ -112,14 +112,14 @@ struct BoardState {
     func regions() -> [Position: Region] {
         var regionMap = [Position: Region]()
 
-        for x in 0 ..< board.thingWidth {
-            for y in 0 ..< board.thingHeight {
+        for x in 0 ..< board.cellWidth {
+            for y in 0 ..< board.cellHeight {
                 let p = Position(x, y)
                 if regionMap[p] != nil {
                     continue
                 }
                 let set: Set<Position> = [p]
-                let newRegion = set.union(reachableThingPositions(fromThingPosition: p, done: set))
+                let newRegion = set.union(reachableCellPositions(fromCellPosition: p, done: set))
                 for position in newRegion {
                     regionMap[position] = newRegion
                 }
@@ -129,8 +129,8 @@ struct BoardState {
         return regionMap
     }
 
-    func reachableThingPositions(fromThingPosition position: Position, done: Set<Position> = []) -> Set<Position> {
-        let moves = board.possibleAdjacentThingPositions(fromThingPosition: position).filter {
+    func reachableCellPositions(fromCellPosition position: Position, done: Set<Position> = []) -> Set<Position> {
+        let moves = board.possibleAdjacentCellPositions(fromCellPosition: position).filter {
             !done.contains($0)
         }.filter {
             to in
@@ -160,7 +160,7 @@ struct BoardState {
         } else {
             let set: Set<Position> = Set(moves)
             return set.union(moves.flatMap {
-                self.reachableThingPositions(fromThingPosition: $0, done: done.union(moves))
+                self.reachableCellPositions(fromCellPosition: $0, done: done.union(moves))
             })
         }
     }
