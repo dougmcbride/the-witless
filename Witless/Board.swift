@@ -26,6 +26,15 @@ enum Corner {
     }
 }
 
+enum SolutionStrategy {
+    /// Quit after finding the first solution (fastest)
+    case first
+    /// Find all solutions
+    case all
+    /// Find all solutions and only return the shortest
+    case shortestPath
+}
+
 struct Board {
     let width: Int
     let height: Int
@@ -33,6 +42,7 @@ struct Board {
     let endPositions: Set<Position>
     let things: [[Thing]]
     let xWrapping: Bool
+    var solutionStrategy: SolutionStrategy = .all
 
     let thingWidth: Int
     let thingHeight: Int
@@ -188,7 +198,14 @@ struct Board {
         return segments[position.y][position.x]
     }
 
-    func successfulBoardStates() -> [BoardState] {
-        return initialState.findSuccessfulStates()
+    func findSuccessfulBoardStates() -> [BoardState] {
+        do {
+            return try initialState.findSuccessfulStates()
+        } catch BoardStateException.foundSolution(let solvedState) {
+            return [solvedState]
+        } catch {
+            print("Error: \(error)")
+            return []
+        }
     }
 }

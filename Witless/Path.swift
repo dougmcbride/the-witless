@@ -17,6 +17,10 @@ struct Path {
         return moves.map{$0.wasdValue()}.joined(separator: "")
     }
 
+    var length: Int {
+        return moves.count
+    }
+
     init(startPosition: Position, moves: [Move], board: Board) {
         self.startPosition = startPosition
         self.moves = moves

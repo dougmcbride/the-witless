@@ -3,6 +3,10 @@
 
 import Foundation
 
+enum BoardStateException: Error {
+    case foundSolution(BoardState)
+}
+
 struct BoardState {
     let board: Board
     let path: Path?
@@ -25,7 +29,7 @@ struct BoardState {
         return BoardState(board: board, path: newPath)
     }
 
-    var succeeded: Bool {
+    func succeeded() throws -> Bool {
         guard let lastPosition = path?.positions.last else {
             return false
         }
@@ -76,6 +80,10 @@ struct BoardState {
 
         if actualToRequiredAdjacentSegmentsForTriangles(is: !=) {
             return false
+        }
+
+        if case .first = board.solutionStrategy {
+            throw BoardStateException.foundSolution(self)
         }
 
         return true
@@ -157,11 +165,28 @@ struct BoardState {
         }
     }
 
-    func findSuccessfulStates(maximum: Int = Int.max) -> [BoardState] {
+    func findSuccessfulStates() throws -> [BoardState] {
         let possibleStates = self.possibleNextStates()
 
-        return possibleStates.filter { !$0.hitDeadEnd }.filter { $0.succeeded } +
-               possibleStates.flatMap { $0.findSuccessfulStates() }
+        let immediateSuccessfulStates = try possibleStates
+                .filter { !$0.hitDeadEnd }
+                .filter { try $0.succeeded() }
+
+        let allSolutions = try immediateSuccessfulStates + possibleStates.flatMap { try $0.findSuccessfulStates() }
+
+        switch board.solutionStrategy {
+            case .all:
+                return allSolutions
+            case .shortestPath:
+                if let shortest = allSolutions.sorted(by: { $0.path!.length < $1.path!.length }).first {
+                    return [shortest]
+                } else {
+                    return []
+                }
+            case .first:
+                // We would have quit by now if we'd found a solution.
+                return []
+        }
     }
 }
 
