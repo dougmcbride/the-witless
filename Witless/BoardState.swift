@@ -15,15 +15,9 @@ struct BoardState {
         }
 
         return board.moves(from: lastPosition)
-                .filter { move in
-                    path!.doesNotIntersectItselfByAddingMove(move, toBoard: board)
-                }
-                .map { move in
-                    makeState(adding: move)
-                }
-                .filter { state in
-                    !state.hitDeadEnd
-                }
+                .filter { move in path!.doesNotIntersectItselfByAddingMove(move, toBoard: board) }
+                .map { move in makeState(adding: move) }
+                .filter { state in !state.hitDeadEnd }
     }
 
     func makeState(adding move: Move) -> BoardState {
@@ -80,14 +74,14 @@ struct BoardState {
             }
         }
 
-        if compareActualToRequiredAdjacentSegmentsForTriangles(!=) {
+        if actualToRequiredAdjacentSegmentsForTriangles(is: !=) {
             return false
         }
 
         return true
     }
 
-    func compareActualToRequiredAdjacentSegmentsForTriangles(_ compare: ((Int, Int) -> Bool)) -> Bool {
+    func actualToRequiredAdjacentSegmentsForTriangles(is compare: ((Int, Int) -> Bool)) -> Bool {
         return board.triangles.contains { triangle in
             let actualCount = board.allSegments(bordering: triangle.position).intersection(path!.segments).count
             return compare(actualCount, triangle.requiredSegmentCount)
@@ -95,7 +89,7 @@ struct BoardState {
     }
 
     var hitDeadEnd: Bool {
-        return compareActualToRequiredAdjacentSegmentsForTriangles(>)
+        return actualToRequiredAdjacentSegmentsForTriangles(is: >)
     }
 
     func regionThings() -> [[Thing]] {
@@ -166,17 +160,8 @@ struct BoardState {
     func successfulBoardStates(maximum: Int = Int.max) -> [BoardState] {
         let possibleStates = self.possibleBoardStates()
 
-        if possibleStates.isEmpty {
-            return []
-        } else {
-            return possibleStates.filter {
-                        !$0.hitDeadEnd
-                    }.filter {
-                        $0.succeeded
-                    } + possibleStates.flatMap {
-                $0.successfulBoardStates()
-            }
-        }
+        return possibleStates.filter { !$0.hitDeadEnd }.filter { $0.succeeded } +
+               possibleStates.flatMap { $0.successfulBoardStates() }
     }
 }
 
