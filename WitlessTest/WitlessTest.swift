@@ -133,7 +133,7 @@ class ThingSpec: QuickSpec {
 
 class SolutionSpec: QuickSpec {
     func checkSolutions(for board: Board, are moves: [String]) {
-        expect(board.successfulBoardStates()).to(beMoves(board.startPositions.first!, moves: moves))
+        expect(board.findSuccessfulBoardStates()).to(beMoves(board.startPositions.first!, moves: moves))
     }
 
     override func spec() {
