@@ -84,11 +84,16 @@ struct Board {
         let cellWidth = cells.first!.count
 
         var segments = [[Set<Segment>]]()
+        var triangles = [Triangle]()
 
         for y in 0 ..< cellHeight {
             var row = [Set<Segment>]()
 
             for x in 0 ..< cellWidth {
+                if case .triangle(let count) = cells[y][x] {
+                    triangles.append(Triangle(requiredSegmentCount: count, position: Position(x, y)))
+                }
+
                 let topSegment = Segment(Position(x, y), Position(x + 1, y))
                 let bottomSegment = Segment(Position(x, y + 1), Position(x + 1, y + 1))
                 let leftSegment = Segment(Position(x, y), Position(x, y + 1))
@@ -102,16 +107,6 @@ struct Board {
             }
 
             segments.append(row)
-        }
-
-        var triangles = [Triangle]()
-
-        for y in 0 ..< cellHeight {
-            for x in 0 ..< cellWidth {
-                if case .triangle(let count) = cells[y][x] {
-                    triangles.append(Triangle(requiredSegmentCount: count, position: Position(x, y)))
-                }
-            }
         }
 
         self.cellHeight = cellHeight
