@@ -9,28 +9,28 @@ enum BoardStateException: Error {
 
 struct BoardState {
     let board: Board
-    let path: Path?
+    let path: Path
 
     func possibleNextStates() -> [BoardState] {
-        guard let lastPosition = path?.positions.last else {
+        guard let lastPosition = path.positions.last else {
             return board.startingPaths().map {
                 BoardState(board: board, path: $0)
             }
         }
 
         return board.moves(from: lastPosition)
-                .filter { move in path!.doesNotIntersectItselfByAddingMove(move, toBoard: board) }
+                .filter { move in path.doesNotIntersectItselfByAddingMove(move, toBoard: board) }
                 .map { move in makeState(adding: move) }
                 .filter { state in !state.hitDeadEnd }
     }
 
     func makeState(adding move: Move) -> BoardState {
-        let newPath = path!.path(addingMove: move, onBoard: board)
+        let newPath = path.path(addingMove: move, onBoard: board)
         return BoardState(board: board, path: newPath)
     }
 
     func succeeded() throws -> Bool {
-        guard let lastPosition = path?.positions.last else {
+        guard let lastPosition = path.positions.last else {
             return false
         }
 
@@ -99,13 +99,13 @@ struct BoardState {
         }
 
         return triangles.contains { triangle in
-            let actualCount = board.allSegments(bordering: triangle.position).intersection(path!.segments).count
+            let actualCount = board.allSegments(bordering: triangle.position).intersection(path.segments).count
             return compare(actualCount, triangle.requiredSegmentCount)
         }
     }
 
     var hitDeadEnd: Bool {
-        guard let segment = path?.segments.last else {
+        guard let segment = path.segments.last else {
             return false
         }
 
@@ -159,7 +159,7 @@ struct BoardState {
                 }
             }()
 
-            return !path!.segments.contains {
+            return !path.segments.contains {
                 segment in
                 let p1 = Position(px, py)
                 let p2 = Position(px + targetDelta.0, py + targetDelta.1)
@@ -190,7 +190,7 @@ struct BoardState {
             case .all:
                 return allSolutions
             case .shortestPath:
-                if let shortest = allSolutions.sorted(by: { $0.path!.length < $1.path!.length }).first {
+                if let shortest = allSolutions.sorted(by: { $0.path.length < $1.path.length }).first {
                     return [shortest]
                 } else {
                     return []
@@ -204,6 +204,6 @@ struct BoardState {
 
 extension BoardState: CustomDebugStringConvertible {
     var debugDescription: String {
-        return "BoardState(path: \(path?.movesString)"
+        return "BoardState(path: \(path.movesString)"
     }
 }

@@ -13,7 +13,7 @@ func containMoves(_ startPosition: Position, movesString: String) -> NonNilMatch
         }
 
         return boardStates.map {
-            $0.path!
+            $0.path
         }.contains {
             $0 == Path(startPosition: startPosition, movesString: movesString, board: boardStates.first!.board)
         }

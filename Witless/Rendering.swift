@@ -51,7 +51,7 @@ struct ASCIIRenderer: Renderer {
     }
 
     private func printColumnSeparator(_ boardState: BoardState, row: Int, column: Int) {
-        if boardState.path!.segments.contains(Segment(boardState.board.positionAt(column + 1, row)!,
+        if boardState.path.segments.contains(Segment(boardState.board.positionAt(column + 1, row)!,
                                                       boardState.board.positionAt(column + 1, row + 1)!)) {
             print("█", terminator: "")
         } else {
@@ -69,13 +69,13 @@ struct ASCIIRenderer: Renderer {
         let vMarker = "█"
         let hMarker = "█" * 5
 
-        for segment in boardState.path!.segments where segment.row == row {
+        for segment in boardState.path.segments where segment.row == row {
             let startIndex = line.characters.index(line.startIndex, offsetBy: 1 + segment.minX * 4)
             let endIndex = line.characters.index(startIndex, offsetBy: hMarker.characters.count)
             line.replaceSubrange(startIndex ..< endIndex, with: hMarker)
         }
 
-        for position in boardState.path!.positions where position.y == row {
+        for position in boardState.path.positions where position.y == row {
             let startIndex = line.characters.index(line.startIndex, offsetBy: 1 + position.x * 4)
             let endIndex = line.characters.index(startIndex, offsetBy: vMarker.characters.count)
             line.replaceSubrange(startIndex ..< endIndex, with: vMarker)

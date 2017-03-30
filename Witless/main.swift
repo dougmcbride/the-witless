@@ -46,7 +46,7 @@ if solutionStates.isEmpty {
 
 for solution in solutionStates {
     ASCIIRenderer().draw(boardState: solution)
-    print(solution.path!.movesString)
+    print(solution.path.movesString)
 //    let keystrokes = solution.path!.wasdMovesString + "W"
 
 //    let task = Process()

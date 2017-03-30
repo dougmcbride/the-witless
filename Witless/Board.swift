@@ -131,8 +131,8 @@ struct Board {
         self.trianglesBorderingSegment = trianglesBorderingSegment
     }
 
-    var initialState: BoardState {
-        return BoardState(board: self, path: nil)
+    var initialStates: [BoardState] {
+        return startPositions.map { BoardState(board: self, path: Path(startPosition: $0, board: self)) }
     }
 
     func pathPosition(from position: Position, moving move: Move) -> Position? {
@@ -211,7 +211,7 @@ struct Board {
 
     func findSuccessfulBoardStates() -> [BoardState] {
         do {
-            return try initialState.findSuccessfulStates()
+            return try initialStates.flatMap { try $0.findSuccessfulStates() }
         } catch BoardStateException.foundSolution(let solvedState) {
             return [solvedState]
         } catch {
