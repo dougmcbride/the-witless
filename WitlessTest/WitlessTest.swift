@@ -151,6 +151,23 @@ class SolutionSpec: QuickSpec {
             }
         }
 
+        describe("a three-star board") {
+            it("can't be solved") {
+                let board = Board(start: Position(0,0), end: Position(3, 0), things: [[.star(.Black), .star(.Black), .star(.Black)]])
+                let solutions = board.successfulBoardStates()
+                expect(solutions).to(beEmpty())
+            }
+        }
+
+        describe("a 2x2 star board") {
+            it("has four solutions") {
+                let startPosition = Position(0, 2)
+                let board = Board(start: startPosition, end: Position(2, 0), things: [[.star(.Purple), .star(.Purple)], [.star(.Purple), .star(.Purple)]])
+                let solutions = board.successfulBoardStates()
+                expect(solutions).to(beMoves(startPosition, moves: ["UURDDRUU", "URRU", "RUUR", "RRULLURR"]))
+            }
+        }
+
         describe("a BWB/BWB/BWB board") {
             let things = try! Thing.parse("BWB/BWB/BWB")
 
