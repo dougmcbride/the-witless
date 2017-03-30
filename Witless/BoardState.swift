@@ -89,15 +89,27 @@ struct BoardState {
         return true
     }
 
-    func actualToRequiredAdjacentSegmentsForTriangles(is compare: ((Int, Int) -> Bool)) -> Bool {
-        return board.triangles.contains { triangle in
+    func actualToRequiredAdjacentSegmentsForTriangles(is compare: ((Int, Int) -> Bool), bordering segment: Segment? = nil) -> Bool {
+        let triangles: [Triangle]
+
+        if let segment_ = segment {
+            triangles = board.trianglesBorderingSegment[segment_] ?? []
+        } else {
+            triangles = board.triangles
+        }
+
+        return triangles.contains { triangle in
             let actualCount = board.allSegments(bordering: triangle.position).intersection(path!.segments).count
             return compare(actualCount, triangle.requiredSegmentCount)
         }
     }
 
     var hitDeadEnd: Bool {
-        return actualToRequiredAdjacentSegmentsForTriangles(is: >)
+        guard let segment = path?.segments.last else {
+            return false
+        }
+
+        return actualToRequiredAdjacentSegmentsForTriangles(is: >, bordering: segment)
     }
 
     func regionCells() -> [[Cell]] {

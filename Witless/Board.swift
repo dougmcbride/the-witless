@@ -49,6 +49,7 @@ struct Board {
     let caresAboutRegions: Bool
     let segments: [[Set<Segment>]]
     let triangles: [Triangle]
+    let trianglesBorderingSegment: [Segment: [Triangle]]
 
     init(startCorner: Corner, endCorner: Corner, cells: [[Cell]]) {
         let cellHeight = cells.count
@@ -109,11 +110,25 @@ struct Board {
             segments.append(row)
         }
 
+        var trianglesBorderingSegment = [Segment: [Triangle]]()
+
+        for triangle in triangles {
+            for segment in segments[triangle.position.y][triangle.position.x] {
+                if var triangleArray = trianglesBorderingSegment[segment] {
+                    triangleArray.append(triangle)
+                    trianglesBorderingSegment[segment] = triangleArray
+                } else {
+                    trianglesBorderingSegment[segment] = [triangle]
+                }
+            }
+        }
+
         self.cellHeight = cellHeight
         self.cellWidth = cellWidth
         self.caresAboutRegions = FlattenCollection(cells).contains { $0.caresAboutRegions }
         self.segments = segments
         self.triangles = triangles
+        self.trianglesBorderingSegment = trianglesBorderingSegment
     }
 
     var initialState: BoardState {
