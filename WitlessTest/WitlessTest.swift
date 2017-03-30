@@ -145,7 +145,7 @@ class SolutionSpec: QuickSpec {
         describe("a simple black/white square board") {
             it("has two solutions") {
                 let startPosition = Position(0, 0)
-                let board = Board(start: startPosition, end: Position(2, 0), things: [[.square(.Black), .square(.White)]])
+                let board = Board(start: startPosition, end: Position(2, 0), things: [[.square(.black), .square(.white)]])
                 let solutions = board.successfulBoardStates()
                 expect(solutions).to(beMoves(startPosition, moves: ["RDRU", "DRUR"]))
             }
@@ -153,7 +153,7 @@ class SolutionSpec: QuickSpec {
 
         describe("a three-star board") {
             it("can't be solved") {
-                let board = Board(start: Position(0,0), end: Position(3, 0), things: [[.star(.Black), .star(.Black), .star(.Black)]])
+                let board = Board(start: Position(0,0), end: Position(3, 0), things: [[.star(.black), .star(.black), .star(.black)]])
                 let solutions = board.successfulBoardStates()
                 expect(solutions).to(beEmpty())
             }
@@ -162,7 +162,7 @@ class SolutionSpec: QuickSpec {
         describe("a 2x2 star board") {
             it("has four solutions") {
                 let startPosition = Position(0, 2)
-                let board = Board(start: startPosition, end: Position(2, 0), things: [[.star(.Purple), .star(.Purple)], [.star(.Purple), .star(.Purple)]])
+                let board = Board(start: startPosition, end: Position(2, 0), things: [[.star(.purple), .star(.purple)], [.star(.purple), .star(.purple)]])
                 let solutions = board.successfulBoardStates()
                 expect(solutions).to(beMoves(startPosition, moves: ["UURDDRUU", "URRU", "RUUR", "RRULLURR"]))
             }

@@ -14,13 +14,13 @@ enum ParsingError: Error {
 }
 
 enum Color: String {
-    case White = "W"
-    case Black = "K"
-    case Green = "G"
-    case Red = "R"
-    case Blue = "B"
-    case Yellow = "Y"
-    case Purple = "P"
+    case white = "W"
+    case black = "K"
+    case green = "G"
+    case red = "R"
+    case blue = "B"
+    case yellow = "Y"
+    case purple = "P"
 }
 
 enum Thing: Equatable {
