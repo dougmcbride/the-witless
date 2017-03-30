@@ -76,6 +76,8 @@ struct Position {
         self.x = x
         self.y = y
     }
+
+    static let zero = Position(0, 0)
 }
 
 extension Position: CustomStringConvertible {

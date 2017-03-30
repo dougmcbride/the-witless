@@ -6,6 +6,26 @@ struct Triangle {
     let position: Position
 }
 
+enum Corner {
+    case lowerLeft
+    case upperLeft
+    case lowerRight
+    case upperRight
+
+    func position(thingWidth: Int, thingHeight: Int) -> Position {
+        switch self {
+            case .lowerLeft:
+                return Position(0, thingHeight)
+            case .lowerRight:
+                return Position(thingWidth, thingHeight)
+            case .upperLeft:
+                return .zero
+            case .upperRight:
+                return Position(thingWidth, 0)
+        }
+    }
+}
+
 struct Board {
     let width: Int
     let height: Int
@@ -19,6 +39,15 @@ struct Board {
     let caresAboutRegions: Bool
     let segments: [[Set<Segment>]]
     let triangles: [Triangle]
+
+    init(startCorner: Corner, endCorner: Corner, things: [[Thing]]) {
+        let thingHeight = things.count
+        let thingWidth = things.first!.count
+        let startPosition = startCorner.position(thingWidth: thingWidth, thingHeight: thingHeight)
+        let endPosition = endCorner.position(thingWidth: thingWidth, thingHeight: thingHeight)
+
+        self.init(start: startPosition, end: endPosition, things: things, wrapHorizontal: false)
+    }
 
     init(start: Position, end: Position, things: [[Thing]], wrapHorizontal: Bool = false) {
         self.init(startPositions: [start], endPositions: [end], things: things, wrapHorizontal: wrapHorizontal)

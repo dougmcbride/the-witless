@@ -132,84 +132,72 @@ class ThingSpec: QuickSpec {
 }
 
 class SolutionSpec: QuickSpec {
+    func checkSolutions(for board: Board, are moves: [String]) {
+        expect(board.successfulBoardStates()).to(beMoves(board.startPositions.first!, moves: moves))
+    }
+
     override func spec() {
-        describe("A simple square board") {
+        describe("A 1x1 square board") {
             it("has two solutions") {
-                let startPosition = Position(0, 0)
-                let board = Board(start: startPosition, end: Position(1, 1), things: [[.empty]])
-                let solutions = board.successfulBoardStates()
-                expect(solutions).to(beMoves(startPosition, moves: ["RD", "DR"]))
+                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .lowerRight, things: [[.empty]]),
+                                    are: ["RD", "DR"])
             }
         }
 
         describe("a simple black/white square board") {
             it("has two solutions") {
-                let startPosition = Position(0, 0)
-                let board = Board(start: startPosition, end: Position(2, 0), things: [[.square(.black), .square(.white)]])
-                let solutions = board.successfulBoardStates()
-                expect(solutions).to(beMoves(startPosition, moves: ["RDRU", "DRUR"]))
+                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .upperRight, things: [[.square(.black), .square(.white)]]),
+                                    are: ["RDRU", "DRUR"])
             }
         }
 
         describe("a three-star board") {
             it("can't be solved") {
-                let board = Board(start: Position(0,0), end: Position(3, 0), things: [[.star(.black), .star(.black), .star(.black)]])
-                let solutions = board.successfulBoardStates()
-                expect(solutions).to(beEmpty())
+                self.checkSolutions(for: Board(startCorner: .upperLeft, endCorner: .upperRight, things: [[.star(.black), .star(.black), .star(.black)]]),
+                                    are: [])
             }
         }
 
         describe("a 2x2 star board") {
             it("has four solutions") {
-                let startPosition = Position(0, 2)
-                let board = Board(start: startPosition, end: Position(2, 0), things: [[.star(.purple), .star(.purple)], [.star(.purple), .star(.purple)]])
-                let solutions = board.successfulBoardStates()
-                expect(solutions).to(beMoves(startPosition, moves: ["UURDDRUU", "URRU", "RUUR", "RRULLURR"]))
+                self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, things: [[.star(.purple), .star(.purple)],
+                                                                                                         [.star(.purple), .star(.purple)]]),
+                                    are: ["UURDDRUU", "URRU", "RUUR", "RRULLURR"])
             }
         }
 
-        describe("a BWB/BWB/BWB board") {
-            let things = try! Thing.parse("BWB/BWB/BWB")
+        describe("a BWB/BWB/BWB board without wrapping") {
+            it("can't be solved") {
 
-            context("without wrapping") {
-                let board = Board(start: Position(0, 3), end: Position(0, 0), things: things)
-                it("can't be solved") {
-                    expect(board.successfulBoardStates()).to(beEmpty())
-                }
+                self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperLeft, things: try! Thing.parse("BWB/BWB/BWB")),
+                                    are: [])
             }
         }
 
         describe("a 2x1 board with horizontal wrapping") {
             it("has four solutions") {
-                let startPosition = Position(0, 1)
-                let board = Board(start: startPosition, end: Position(1, 0),
-                                  things: [[.empty, .empty]], wrapHorizontal: true)
-                let successfulBoards = board.successfulBoardStates()
-                expect(successfulBoards).to(beMoves(startPosition, moves: ["UR", "RU", "LU", "UL"]))
+                self.checkSolutions(for: Board(start: Position(0, 1), end: Position(1, 0), things: [[.empty, .empty]], wrapHorizontal: true),
+                                    are: ["UR", "RU", "LU", "UL"])
             }
         }
 
         describe("a triangle puzzle") {
             describe("without wrapping") {
                 it("has one solution") {
-                    let startPosition = Position(0, 1)
-                    let board = Board(start: startPosition, end: Position(2, 0), things: [[.empty, .triangle(1)]])
-                    expect(board.successfulBoardStates()).to(beMoves(startPosition, moves: ["URR"]))
+                    self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, things: [[.empty, .triangle(1)]]),
+                                        are: ["URR"])
                 }
 
                 it("has two solutions") {
-                    let startPosition = Position(0, 1)
-                    let board = Board(start: startPosition, end: Position(2, 0), things: [[.empty, .triangle(2)]])
-                    expect(board.successfulBoardStates()).to(beMoves(startPosition, moves: ["RRU", "RUR"]))
+                    self.checkSolutions(for: Board(startCorner: .lowerLeft, endCorner: .upperRight, things: [[.empty, .triangle(2)]]),
+                                        are: ["RRU", "RUR"])
                 }
             }
 
             describe("with wrapping") {
                 it("has three solutions") {
-                    let startPosition = Position(0, 2)
-                    let board = Board(start: startPosition, end: Position(0, 0), things: [[.empty, .empty], [.triangle(2), .empty]], wrapHorizontal: true)
-                    let successfulBoards = board.successfulBoardStates()
-                    expect(successfulBoards).to(beMoves(startPosition, moves: ["URUL", "RUUL", "LULU"]))
+                    self.checkSolutions(for: Board(start: Position(0, 2), end: .zero, things: [[.empty, .empty], [.triangle(2), .empty]], wrapHorizontal: true),
+                                        are: ["URUL", "RUUL", "LULU"])
                 }
             }
         }
