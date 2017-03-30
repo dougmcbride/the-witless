@@ -118,6 +118,19 @@ class SegmentSpec: QuickSpec {
     }
 }
 
+class ThingSpec: QuickSpec {
+    override func spec() {
+        super.spec()
+        describe("an unknown symbol") {
+            it("should cause a parsing exception") {
+                expect {
+                    try Thing.parse("J")
+                }.to(throwError())
+            }
+        }
+    }
+}
+
 class SolutionSpec: QuickSpec {
     override func spec() {
         describe("A simple square board") {
@@ -135,14 +148,6 @@ class SolutionSpec: QuickSpec {
                 let board = Board(start: startPosition, end: Position(2, 0), things: [[.square(.Black), .square(.White)]])
                 let solutions = board.successfulBoardStates()
                 expect(solutions).to(beMoves(startPosition, moves: ["RDRU", "DRUR"]))
-            }
-        }
-
-        describe("an unknown symbol") {
-            it("should cause a parsing exception") {
-                expect {
-                    try Thing.parse("J")
-                }.to(throwError())
             }
         }
 
