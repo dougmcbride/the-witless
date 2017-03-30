@@ -29,6 +29,7 @@ enum Cell: Equatable {
     case square(Color)
     case triangle(Int)
 
+    /// Parse a /-delimited String into rows of cells
     static func parse(_ string: String) throws -> [[Cell]] {
         return try string.characters.split(separator: "/").map { (sequence: AnySequence<Character>) in
             try sequence.map { (s: Character) -> Cell in
