@@ -80,12 +80,15 @@ struct Board {
         self.things = things
         self.xWrapping = wrapHorizontal
 
+        let thingHeight = things.count
+        let thingWidth = things.first!.count
+
         var segments = [[Set<Segment>]]()
 
-        for y in 0 ..< height {
+        for y in 0 ..< thingHeight {
             var row = [Set<Segment>]()
 
-            for x in 0 ..< width {
+            for x in 0 ..< thingWidth {
                 let topSegment = Segment(Position(x, y), Position(x + 1, y))
                 let bottomSegment = Segment(Position(x, y + 1), Position(x + 1, y + 1))
                 let leftSegment = Segment(Position(x, y), Position(x, y + 1))
@@ -102,8 +105,6 @@ struct Board {
         }
 
         var triangles = [Triangle]()
-        let thingHeight = things.count
-        let thingWidth = things.first!.count
 
         for y in 0 ..< thingHeight {
             for x in 0 ..< thingWidth {
