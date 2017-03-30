@@ -189,6 +189,6 @@ struct Board {
     }
 
     func successfulBoardStates() -> [BoardState] {
-        return initialState.successfulBoardStates()
+        return initialState.findSuccessfulStates()
     }
 }

@@ -7,7 +7,7 @@ struct BoardState {
     let board: Board
     let path: Path?
 
-    func possibleBoardStates() -> [BoardState] {
+    func possibleNextStates() -> [BoardState] {
         guard let lastPosition = path?.positions.last else {
             return board.startingPaths().map {
                 BoardState(board: board, path: $0)
@@ -157,11 +157,11 @@ struct BoardState {
         }
     }
 
-    func successfulBoardStates(maximum: Int = Int.max) -> [BoardState] {
-        let possibleStates = self.possibleBoardStates()
+    func findSuccessfulStates(maximum: Int = Int.max) -> [BoardState] {
+        let possibleStates = self.possibleNextStates()
 
         return possibleStates.filter { !$0.hitDeadEnd }.filter { $0.succeeded } +
-               possibleStates.flatMap { $0.successfulBoardStates() }
+               possibleStates.flatMap { $0.findSuccessfulStates() }
     }
 }
 
