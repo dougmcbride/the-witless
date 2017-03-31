@@ -141,7 +141,7 @@ struct Board {
         }
     }
 
-    func cellPosition(fromPosition position: Position, moving move: Move) -> Position? {
+    func cellPosition(from position: Position, moving move: Move) -> Position? {
         return makePosition(fromPosition: position, move: move) { x, y in
             return positionAt(x, y, useCellPosition: true)
         }
@@ -199,9 +199,9 @@ struct Board {
         }
     }
 
-    func possibleAdjacentCellPositions(fromCellPosition p: Position) -> [Position] {
+    func possibleAdjacentCellPositions(from position: Position) -> [Position] {
         return Move.allMoves.flatMap {
-            cellPosition(fromPosition: p, moving: $0)
+            cellPosition(from: position, moving: $0)
         }
     }
 

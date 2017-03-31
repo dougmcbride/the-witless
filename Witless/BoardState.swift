@@ -131,7 +131,7 @@ struct BoardState {
                     continue
                 }
                 let set: Set<Position> = [p]
-                let newRegion = set.union(reachableCellPositions(fromCellPosition: p, done: set))
+                let newRegion = set.union(reachableCellPositions(from: p, done: set))
                 for position in newRegion {
                     regionMap[position] = newRegion
                 }
@@ -141,8 +141,8 @@ struct BoardState {
         return regionMap
     }
 
-    func reachableCellPositions(fromCellPosition position: Position, done: Set<Position> = []) -> Set<Position> {
-        let moves = board.possibleAdjacentCellPositions(fromCellPosition: position).filter {
+    func reachableCellPositions(from position: Position, done: Set<Position> = []) -> Set<Position> {
+        let moves = board.possibleAdjacentCellPositions(from: position).filter {
             !done.contains($0)
         }.filter {
             to in
@@ -172,7 +172,7 @@ struct BoardState {
         } else {
             let set: Set<Position> = Set(moves)
             return set.union(moves.flatMap {
-                self.reachableCellPositions(fromCellPosition: $0, done: done.union(moves))
+                self.reachableCellPositions(from: $0, done: done.union(moves))
             })
         }
     }

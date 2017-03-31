@@ -21,43 +21,35 @@ import Foundation
 //var board = Board(startCorner: .lowerLeft, endCorner: .upperRight, cells: cells)
 
 // The tough cylinder puzzle in the Secret Caverns
-let cells = try Cell.parse("EEEEEE/222222/EEEEEE/111111/EEEEEE/222222")
-var board = Board(start: Position(3, 6), end: Position(3, 0), cells: cells, wrapHorizontal: true)
+//let cells = try Cell.parse("EEEEEE/222222/EEEEEE/111111/EEEEEE/222222")
+//var board = Board(start: Position(3, 6), end: Position(3, 0), cells: cells, wrapHorizontal: true)
 
-let processInfo = ProcessInfo.processInfo
-board.solutionStrategy = .first
+while let inputLine = readLine(strippingNewline: true) {
+    let cells = try Cell.parse(inputLine)
+    var board = Board(start: .zero, end: Position(cells.first!.count, cells.count), cells: cells, wrapHorizontal: true)
 
-let startTime = processInfo.systemUptime
-let solutionStates = board.findSuccessfulBoardStates()
-let timeInterval = processInfo.systemUptime - startTime
+    let processInfo = ProcessInfo.processInfo
+//    board.solutionStrategy = .all
 
-if solutionStates.isEmpty {
-    print("Found no solutions, took \(timeInterval) seconds to search")
-} else {
-    switch board.solutionStrategy {
-        case .all:
-            print("Found \(solutionStates.count) possible solutions in \(timeInterval) seconds")
-        case .first:
-            print("Found a solution in \(timeInterval) seconds")
-        case .shortestPath:
-            print("Found shortest path in \(timeInterval) seconds")
+    let startTime = processInfo.systemUptime
+    let solutionStates = board.findSuccessfulBoardStates()
+    let timeInterval = processInfo.systemUptime - startTime
+
+    if solutionStates.isEmpty {
+        print("Found no solutions, took \(timeInterval) seconds to search")
+    } else {
+        switch board.solutionStrategy {
+            case .all:
+                print("Found \(solutionStates.count) possible solutions in \(timeInterval) seconds")
+            case .first:
+                print("Found a solution in \(timeInterval) seconds")
+            case .shortestPath:
+                print("Found shortest path in \(timeInterval) seconds")
+        }
+    }
+
+    for solution in solutionStates {
+        ASCIIRenderer().draw(boardState: solution)
+        print("\(solution.path.movesString) (\(solution.path.length) moves)")
     }
 }
-
-for solution in solutionStates {
-    ASCIIRenderer().draw(boardState: solution)
-    print(solution.path.movesString)
-//    let keystrokes = solution.path!.wasdMovesString + "W"
-
-//    let task = Process()
-//    task.launchPath = "/usr/bin/pbcopy"
-
-//    let pipe = Pipe()
-//    task.standardInput = pipe
-//    task.launch()
-
-//    let handle = pipe.fileHandleForWriting
-//    handle.write(keystrokes.data(using: .utf8)!)
-//    handle.closeFile()
-}
-
