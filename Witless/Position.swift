@@ -37,7 +37,7 @@ extension Segment: Equatable {
 
 extension Segment: Hashable {
     var hashValue: Int {
-        return 51 * position1.hashValue + 51 * position2.hashValue
+        return (51 + position1.hashValue) * (51 + position2.hashValue)
     }
 }
 
