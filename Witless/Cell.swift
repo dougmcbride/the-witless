@@ -35,7 +35,7 @@ enum Cell: Equatable {
             try sequence.map { (character: Character) -> Cell in
                 let charString = String(character)
                 switch charString {
-                    case "E", "e", " ":
+                    case "E", "e", " ", ".":
                         return .empty
                     case "1", "2", "3":
                         return .triangle(Int(charString)!)
